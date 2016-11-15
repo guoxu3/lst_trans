@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Writing a locustfile &#8212; lst 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Running Locust distributed" href="running-locust-distributed.html" />
+    <link rel="prev" title="Quick start" href="quickstart.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="writing-a-locustfile">
+<h1>Writing a locustfile<a class="headerlink" href="#writing-a-locustfile" title="Permalink to this headline">¶</a></h1>
+<p>A locustfile is a normal python file. The only requirement is that it declares at least one class—
+let&#8217;s call it the locust class—that inherits from the class Locust.</p>
+<div class="section" id="the-locust-class">
+<h2>The Locust class<a class="headerlink" href="#the-locust-class" title="Permalink to this headline">¶</a></h2>
+<p>A locust class represents one user (or a swarming locust if you will). Locust will spawn (hatch) one
+instance of the locust class for each user that is being simulated. There are a few attributes that
+a locust class should typically define.</p>
+<div class="section" id="the-task-set-attribute">
+<h3>The <code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> attribute<a class="headerlink" href="#the-task-set-attribute" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> attribute should point to a
+<code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> class which defines the behaviour of the user and
+is described in more details below.</p>
+</div>
+<div class="section" id="the-min-wait-and-max-wait-attributes">
+<h3>The <em>min_wait</em> and <em>max_wait</em> attributes<a class="headerlink" href="#the-min-wait-and-max-wait-attributes" title="Permalink to this headline">¶</a></h3>
+<p>Additionally to the task_set attribute, one usually want to declare the <em>min_wait</em> and <em>max_wait</em>
+attributes. These are the minimum and maximum time, in milliseconds, that a simulated user will wait
+between executing each task. <em>min_wait</em> and <em>max_wait</em> default to 1000, and therefore a locust will
+always wait 1 second between each task if <em>min_wait</em> and <em>max_wait</em> are not declared.</p>
+<p>With the following locustfile, each user would wait between 5 and 15 seconds between tasks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+
+<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span>
+    <span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s2">&quot;executing my_task&quot;</span>
+
+<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">15000</span>
+</pre></div>
+</div>
+<p>The <em>min_wait</em> and <em>max_wait</em> attributes can also be overridden in a TaskSet class.</p>
+</div>
+<div class="section" id="the-weight-attribute">
+<h3>The <em>weight</em> attribute<a class="headerlink" href="#the-weight-attribute" title="Permalink to this headline">¶</a></h3>
+<p>You can run two locusts from the same file like so:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="n">locust_file</span><span class="o">.</span><span class="n">py</span> <span class="n">WebUserLocust</span> <span class="n">MobileUserLocust</span>
+</pre></div>
+</div>
+<p>If you wish to make one of these locusts execute more often you can set a weight attribute on those
+classes. Say for example, web users are three times more likely than mobile users:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WebUserLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="o">....</span>
+
+<span class="k">class</span> <span class="nc">MobileUserLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="o">....</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-host-attribute">
+<h3>The <em>host</em> attribute<a class="headerlink" href="#the-host-attribute" title="Permalink to this headline">¶</a></h3>
+<p>The host attribute is a URL prefix (i.e. &#8220;<a class="reference external" href="http://google.com">http://google.com</a>&#8221;) to the host that is to be loaded.
+Usually, this is specified on the command line, using the <code class="code docutils literal"><span class="pre">--host</span></code> option, when locust is started.
+If one declares a host attribute in the locust class, it will be used in the case when no <code class="code docutils literal"><span class="pre">--host</span></code>
+is specified on the command line.</p>
+</div>
+</div>
+<div class="section" id="taskset-class">
+<h2>TaskSet class<a class="headerlink" href="#taskset-class" title="Permalink to this headline">¶</a></h2>
+<p>If the Locust class represents a swarming locust, you could say that the TaskSet class represents
+the brain of the locust. Each Locust class must have a <em>task_set</em> attribute set, that points to
+a TaskSet.</p>
+<p>A TaskSet is, like its name suggests, a collection of tasks. These tasks are normal python callables
+and—if we were load-testing an auction website—could do stuff like &#8220;loading the start page&#8221;,
+&#8220;searching for some product&#8221; and &#8220;making a bid&#8221;.</p>
+<p>When a load test is started, each instance of the spawned Locust classes will start executing their
+TaskSet. What happens then is that each TaskSet will pick one of its tasks and call it. It will then
+wait a number of milliseconds, chosen at random between the Locust class&#8217; <em>min_wait</em> and <em>max_wait</em> attributes
+(unless min_wait/max_wait has been defined directly under the TaskSet, in which case it will use
+its own values instead). Then it will again pick a new task which will be called, then wait again,
+and so on.</p>
+<div class="section" id="declaring-tasks">
+<h3>Declaring tasks<a class="headerlink" href="#declaring-tasks" title="Permalink to this headline">¶</a></h3>
+<p>The typical way of declaring tasks for a TaskSet it to use the <code class="xref py py-meth docutils literal"><span class="pre">task</span></code> decorator.</p>
+<p>Here is an example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+
+<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span>
+    <span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s2">&quot;Locust instance (</span><span class="si">%r</span><span class="s2">) executing my_task&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locust</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
+</pre></div>
+</div>
+<p><strong>&#64;task</strong> takes an optional weight argument that can be used to specify the tasks&#8217; execution ratio. In
+the following example <em>task2</em> will be executed twice as much as <em>task1</em>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+
+<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">15000</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">task1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">task2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tasks-attribute">
+<h3>tasks attribute<a class="headerlink" href="#tasks-attribute" title="Permalink to this headline">¶</a></h3>
+<p>Using the &#64;task decorator to declare tasks is a convenience, and usually that&#8217;s the best way to do
+it. However, it&#8217;s also possible to define the tasks of a TaskSet by setting the
+<code class="xref py py-attr docutils literal"><span class="pre">tasks</span></code> attribute (using the &#64;task decorator will actually
+just populate the <em>tasks</em> attribute).</p>
+<p>The <em>tasks</em> attribute is either a list of python callables, or a <em>&lt;callable : int&gt;</em> dict.
+The tasks are python callables that receive one argument—the TaskSet class instance that is executing
+the task. Here is an extremely simple example of a locustfile (this locustfile won&#8217;t actually load test anything):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span>
+
+<span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">my_task</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
+</pre></div>
+</div>
+<p>If the
+tasks attribute is specified as a list, each time a task is to be performed, it will be randomly
+chosen from the <em>tasks</em> attribute. If however, <em>tasks</em> is a dict—with callables as keys and ints
+as values—the task that is to be executed will be chosen at random but with the int as ratio. So
+with a tasks that looks like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">my_task</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">another_task</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><em>my_task</em> would be 3 times more likely to be executed than <em>another_task</em>.</p>
+</div>
+<div class="section" id="tasksets-can-be-nested">
+<h3>TaskSets can be nested<a class="headerlink" href="#tasksets-can-be-nested" title="Permalink to this headline">¶</a></h3>
+<p>A very important property of TaskSets is that they can be nested, because real websites are usually
+built up in an hierarchical way, with multiple sub-sections. Nesting TaskSets will therefore allow
+us to define a behaviour that simulates users in a more realistic way. For example
+we could define TaskSets with the following structure:</p>
+<ul class="simple">
+<li>Main user behaviour</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>Index page</li>
+<li>Forum page</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>Read thread</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>Reply</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>New thread</li>
+<li>View next page</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>Browse categories</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>Watch movie</li>
+<li>Filter movies</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>About page</li>
+</ul>
+</div></blockquote>
+<p>The way you nest TaskSets is just like when you specify a task using the <strong>tasks</strong> attribute, but
+instead of referring to a python function, you point it to another TaskSet:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ForumPage</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">read_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">new_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">UserBehaviour</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">{</span><span class="n">ForumPage</span><span class="p">:</span><span class="mi">10</span><span class="p">}</span>
+
+    <span class="nd">@task</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>So in above example, if the ForumPage would get selected for execution when the UserBehaviour
+TaskSet is executing, then the ForumPage TaskSet would start executing. The ForumPage TaskSet
+would then pick one of its own tasks, execute it, then wait, and so on.</p>
+<p>There is one important thing to note about the above example, and that is the call to
+self.interrupt() in the ForumPage&#8217;s stop method. What this does is essentially that it will
+stop executing the ForumPage task set and the execution will continue in the UserBehaviour instance.
+If we wouldn&#8217;t have had a call to the <code class="xref py py-meth docutils literal"><span class="pre">interrupt()</span></code> method
+somewhere in ForumPage, the Locust would never stop running the ForumPage task once it has started.
+But by having the interrupt function, we can—together with task weighting—define how likely it
+is that a simulated user leaves the forum.</p>
+<p>It&#8217;s also possible to declare a nested TaskSet, inline in a class, using the
+<code class="xref py py-meth docutils literal"><span class="pre">&#64;task</span></code> decorator, just like when declaring normal tasks:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span>
+    <span class="k">class</span> <span class="nc">SubTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-on-start-function">
+<h3>The on_start function<a class="headerlink" href="#the-on-start-function" title="Permalink to this headline">¶</a></h3>
+<p>A TaskSet class can optionally declare an <code class="xref py py-meth docutils literal"><span class="pre">on_start</span></code> function.
+If so, that function is called when a simulated user starts executing that TaskSet class.</p>
+</div>
+<div class="section" id="referencing-the-locust-instance-or-the-parent-taskset-instance">
+<h3>Referencing the Locust instance, or the parent TaskSet instance<a class="headerlink" href="#referencing-the-locust-instance-or-the-parent-taskset-instance" title="Permalink to this headline">¶</a></h3>
+<p>A TaskSet instance will have the attribute <code class="xref py py-attr docutils literal"><span class="pre">locust</span></code> point to
+its Locust instance, and the attribute <code class="xref py py-attr docutils literal"><span class="pre">parent</span></code> point to its
+parent TaskSet (it will point to the Locust instance, in the base TaskSet).</p>
+</div>
+</div>
+<div class="section" id="making-http-requests">
+<h2>Making HTTP requests<a class="headerlink" href="#making-http-requests" title="Permalink to this headline">¶</a></h2>
+<p>So far, we&#8217;ve only covered the task scheduling part of a Locust user. In order to actually load test
+a system we need to make HTTP requests. To help us do this, the <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code>
+class exists. When using this class, each instance gets a
+<code class="xref py py-attr docutils literal"><span class="pre">client</span></code> attribute which will be an instance of
+<code class="xref py py-attr docutils literal"><span class="pre">HttpSession</span></code> which can be used to make HTTP requests.</p>
+<p>When inheriting from the HttpLocust class, we can use its client attribute to make HTTP requests
+against the server. Here is an example of a locust file that can be used to load test a site
+with two URLs; <strong>/</strong> and <strong>/about/</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">HttpLocust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+
+<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">about</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">HttpLocust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">15000</span>
+</pre></div>
+</div>
+<p>Using the above Locust class, each simulated user will wait between 5 and 15 seconds
+between the requests, and <strong>/</strong> will be requested twice as much as <strong>/about/</strong>.</p>
+<p>The attentive reader will find it odd that we can reference the HttpSession instance
+using <em>self.client</em> inside the TaskSet, and not <em>self.locust.client</em>. We can do this
+because the <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> class has a convenience property
+called client that simply returns self.locust.client.</p>
+</div>
+<div class="section" id="using-the-http-client">
+<h2>Using the HTTP client<a class="headerlink" href="#using-the-http-client" title="Permalink to this headline">¶</a></h2>
+<p>Each instance of HttpLocust has an instance of <code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code>
+in the <em>client</em> attribute. The HttpSession class is actually a subclass of
+<code class="xref py py-class docutils literal"><span class="pre">requests.Session</span></code> and can be used to  make HTTP requests, that will be reported to Locust&#8217;s
+statistics, using the <code class="xref py py-meth docutils literal"><span class="pre">get</span></code>,
+<code class="xref py py-meth docutils literal"><span class="pre">post</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">put</span></code>,
+<code class="xref py py-meth docutils literal"><span class="pre">delete</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">head</span></code>,
+<code class="xref py py-meth docutils literal"><span class="pre">patch</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">options</span></code>
+methods. The HttpSession instance will preserve cookies between requests so that it can be used to log in
+to websites and keep a session between requests. The client attribute can also be reference from the Locust
+instance&#8217;s TaskSet instances so that it&#8217;s easy to retrieve the client and make HTTP requests from within your
+tasks.</p>
+<p>Here&#8217;s a simple example that makes a GET request to the <em>/about</em> path (in this case we assume <em>self</em>
+is an instance of a <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> or <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code>
+class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;Response status code:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+<span class="nb">print</span> <span class="s2">&quot;Response content:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
+</pre></div>
+</div>
+<p>And here&#8217;s an example making a POST request:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span><span class="s2">&quot;testuser&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="s2">&quot;secret&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="section" id="safe-mode">
+<h3>Safe mode<a class="headerlink" href="#safe-mode" title="Permalink to this headline">¶</a></h3>
+<p>The HTTP client is configured to run in safe_mode. What this does is that any request that fails due to
+a connection error, timeout, or similar will not raise an exception, but rather return an empty dummy
+Response object. The request will be reported as a failure in Locust&#8217;s statistics. The returned dummy
+Response&#8217;s <em>content</em> attribute will be set to None, and its <em>status_code</em> will be 0.</p>
+</div>
+<div class="section" id="manually-controlling-if-a-request-should-be-considered-successful-or-a-failure">
+<h3>Manually controlling if a request should be considered successful or a failure<a class="headerlink" href="#manually-controlling-if-a-request-should-be-considered-successful-or-a-failure" title="Permalink to this headline">¶</a></h3>
+<p>By default, requests are marked as failed requests unless the HTTP response code is OK (2xx).
+Most of the time, this default is what you want. Sometimes however—for example when testing
+a URL endpoint that you expect to return 404, or testing a badly designed system that might
+return <em>200 OK</em> even though an error occurred—there&#8217;s a need for manually controlling if
+locust should consider a request as a success or a failure.</p>
+<p>One can mark requests as failed, even when the response code is OK, by using the
+<em>catch_response</em> argument and a with statement:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">catch_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">!=</span> <span class="s2">&quot;Success&quot;</span><span class="p">:</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">failure</span><span class="p">(</span><span class="s2">&quot;Got wrong response&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Just as one can mark requests with OK response codes as failures, one can also use <strong>catch_response</strong>
+argument together with a <em>with</em> statement to make requests that resulted in an HTTP error code still
+be reported as a success in the statistics:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/does_not_exist/&quot;</span><span class="p">,</span> <span class="n">catch_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">success</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="grouping-requests-to-urls-with-dynamic-parameters">
+<h3>Grouping requests to URLs with dynamic parameters<a class="headerlink" href="#grouping-requests-to-urls-with-dynamic-parameters" title="Permalink to this headline">¶</a></h3>
+<p>It&#8217;s very common for websites to have pages whose URLs contain some kind of dynamic parameter(s).
+Often it makes sense to group these URLs together in Locust&#8217;s statistics. This can be done
+by passing a <em>name</em> argument to the <code class="xref py py-class docutils literal"><span class="pre">HttpSession's</span></code>
+different request methods.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Statistics for these requests will be grouped under: /blog/?id=[id]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/blog?id=</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;/blog?id=[id]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Writing a locustfile</a><ul>
+<li><a class="reference internal" href="#the-locust-class">The Locust class</a><ul>
+<li><a class="reference internal" href="#the-task-set-attribute">The <code class="docutils literal"><span class="pre">task_set</span></code> attribute</a></li>
+<li><a class="reference internal" href="#the-min-wait-and-max-wait-attributes">The <em>min_wait</em> and <em>max_wait</em> attributes</a></li>
+<li><a class="reference internal" href="#the-weight-attribute">The <em>weight</em> attribute</a></li>
+<li><a class="reference internal" href="#the-host-attribute">The <em>host</em> attribute</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#taskset-class">TaskSet class</a><ul>
+<li><a class="reference internal" href="#declaring-tasks">Declaring tasks</a></li>
+<li><a class="reference internal" href="#tasks-attribute">tasks attribute</a></li>
+<li><a class="reference internal" href="#tasksets-can-be-nested">TaskSets can be nested</a></li>
+<li><a class="reference internal" href="#the-on-start-function">The on_start function</a></li>
+<li><a class="reference internal" href="#referencing-the-locust-instance-or-the-parent-taskset-instance">Referencing the Locust instance, or the parent TaskSet instance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#making-http-requests">Making HTTP requests</a></li>
+<li><a class="reference internal" href="#using-the-http-client">Using the HTTP client</a><ul>
+<li><a class="reference internal" href="#safe-mode">Safe mode</a></li>
+<li><a class="reference internal" href="#manually-controlling-if-a-request-should-be-considered-successful-or-a-failure">Manually controlling if a request should be considered successful or a failure</a></li>
+<li><a class="reference internal" href="#grouping-requests-to-urls-with-dynamic-parameters">Grouping requests to URLs with dynamic parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick start</a></li>
+      <li>Next: <a href="running-locust-distributed.html" title="next chapter">Running Locust distributed</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/writing-a-locustfile.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, gx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/writing-a-locustfile.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

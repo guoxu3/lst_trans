@@ -1,0 +1,554 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Changelog &#8212; lst 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Extending Locust" href="extending-locust.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>0.7.5<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Use version 1.1.1 of gevent. Fixes an install issue on certain versions of python.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.7.4<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Use a newer version of requests, which fixed an issue for users with older versions of
+requests getting ConnectionErrors (<a class="reference external" href="https://github.com/locustio/locust/issues/273">https://github.com/locustio/locust/issues/273</a>).</li>
+<li>Various fixes to documentation.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>0.7.3<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed bug where POST requests (and other methods as well) got incorrectly reported as
+GET requests, if the request resulted in a redirect.</li>
+<li>Added ability to download exceptions in CSV format. Download links has also been moved
+to it&#8217;s own tab in the web UI.</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>0.7.2<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Locust now returns an exit code of 1 when any failed requests were reported.</li>
+<li>When making an HTTP request to an endpoint that responds with a redirect, the original
+URL that was requested is now used as the name for that entry in the statistics (unless
+an explicit override is specified through the <em>name</em> argument). Previously, the last
+URL in the redirect chain was used to label the request(s) in the statistics.</li>
+<li>Fixed bug which caused only the time of the last request in a redirect chain to be
+included in the reported time.</li>
+<li>Fixed bug which caused the download time of the request body not to be included in the
+reported response time.</li>
+<li>Fixed bug that occurred on some linux dists that were tampering with the python-requests
+system package (removing dependencies which requests is bundling). This bug only occured
+when installing Locust in the python system packages, and not when using virtualenv.</li>
+<li>Various minor fixes and improvements.</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>0.7.1<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Exceptions that occurs within TaskSets are now catched by default.</li>
+<li>Fixed bug which caused Min response time to always be 0 after all locusts had been hatched
+and the statistics had been reset.</li>
+<li>Minor UI improvements in the web interface.</li>
+<li>Handle messages from &#8220;zombie&#8221; slaves by ignoring the message and making a log entry
+in the master process.</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>0.7<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="http-client-functionality-moved-to-httplocust">
+<h3>HTTP client functionality moved to HttpLocust<a class="headerlink" href="#http-client-functionality-moved-to-httplocust" title="Permalink to this headline">¶</a></h3>
+<p>Previously, the Locust class instantiated a <code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code>
+under the client attribute that was used to make HTTP requests. This funcionality has
+now been moved into the <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> class, in an
+effort to make it more obvious how one can use Locust to
+<a class="reference internal" href="testing-other-systems.html"><span class="doc">load test non-HTTP systems</span></a>.</p>
+<p>To make existing locust scripts compatible with the new version you should make your
+locust classes inherit from HttpLocust instead of the base Locust class.</p>
+</div>
+<div class="section" id="msgpack-for-serializing-master-slave-data">
+<h3>msgpack for serializing master/slave data<a class="headerlink" href="#msgpack-for-serializing-master-slave-data" title="Permalink to this headline">¶</a></h3>
+<p>Locust now uses <a class="reference external" href="http://msgpack.org/">msgpack</a> for serializing data that is sent between
+a master node and it&#8217;s slaves. This adresses a possible attack that can be used to execute
+code remote, if one has access to the internal locust ports that are used for master-slave
+communication. The reason for this exploit was due to the fact that pickle was used.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Anyone who uses an older version should make sure that their Locust machines are not publicly
+accessible on port 5557 and 5558. Also, one should never run Locust as root.</p>
+</div>
+<p>Anyone who uses the <code class="xref py py-class docutils literal"><span class="pre">report_to_master</span></code> and
+<code class="xref py py-class docutils literal"><span class="pre">slave_report</span></code> events, needs to make sure that
+any data that is attached to the slave reports is serializable by msgpack.</p>
+</div>
+<div class="section" id="requests-updated-to-version-2-2">
+<h3>requests updated to version 2.2<a class="headerlink" href="#requests-updated-to-version-2-2" title="Permalink to this headline">¶</a></h3>
+<p>Locust updated <a class="reference external" href="http://python-requests.org/">requests</a> to the latest major release.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Requests 1.0 introduced some major API changes (and 2.0 just a few). Please check if you
+are using any internal features and check the documentation:
+<a class="reference external" href="http://docs.python-requests.org/en/latest/api/#migrating-to-1-x">Migrating to 1.x</a> and
+<a class="reference external" href="http://docs.python-requests.org/en/latest/api/#migrating-to-2-x">Migrationg to 2.x</a></p>
+</div>
+</div>
+<div class="section" id="gevent-updated-to-version-1-0">
+<h3>gevent updated to version 1.0<a class="headerlink" href="#gevent-updated-to-version-1-0" title="Permalink to this headline">¶</a></h3>
+<p>gevent 1.0 has now been released and Locust has been updated accordingly.</p>
+</div>
+<div class="section" id="big-refactoring-of-request-statistics-code">
+<h3>Big refactoring of request statistics code<a class="headerlink" href="#big-refactoring-of-request-statistics-code" title="Permalink to this headline">¶</a></h3>
+<p>Refactored <code class="xref py py-class docutils literal"><span class="pre">RequestStats</span></code>.</p>
+<ul class="simple">
+<li>Created <code class="xref py py-class docutils literal"><span class="pre">StatsEntry</span></code> which represents a single stats entry (URL).</li>
+</ul>
+<p>Previously the <code class="xref py py-class docutils literal"><span class="pre">RequestStats</span></code> was actually doing two different things:</p>
+<ul class="simple">
+<li>It was holding track of the aggregated stats from all requests</li>
+<li>It was holding the stats for single stats entries.</li>
+</ul>
+<p>Now RequestStats should be instantiated and holds the global stats, as well as a dict of StatsEntry instances which holds the stats for single stats entries (URLs)</p>
+</div>
+<div class="section" id="removed-support-for-avg-wait">
+<h3>Removed support for avg_wait<a class="headerlink" href="#removed-support-for-avg-wait" title="Permalink to this headline">¶</a></h3>
+<p>Previously one could specify avg_wait to <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> and <code class="xref py py-class docutils literal"><span class="pre">Locust</span></code> that Locust would try to strive to. However this can be sufficiently accomplished by using min_wait and max_wait for most use-cases. Therefore we&#8217;ve decided to remove the avg_wait as it&#8217;s use-case is not clear or just too narrow to be in the Locust core.</p>
+</div>
+<div class="section" id="removed-support-for-ramping">
+<h3>Removed support for ramping<a class="headerlink" href="#removed-support-for-ramping" title="Permalink to this headline">¶</a></h3>
+<p>Previously one could tell Locust, using the &#8211;ramp option, to try to find a stable client count that the target host could handle, but it&#8217;s been broken and undocumented for quite a while so we&#8217;ve decided to remove it from the locust core and perhaps have it reappear as a plugin in the future.</p>
+</div>
+<div class="section" id="locust-event-hooks-now-takes-keyword-argument">
+<h3>Locust Event hooks now takes keyword argument<a class="headerlink" href="#locust-event-hooks-now-takes-keyword-argument" title="Permalink to this headline">¶</a></h3>
+<p>When <a class="reference internal" href="extending-locust.html"><span class="doc">Extending Locust</span></a> by listening to <a class="reference internal" href="api.html#events"><span class="std std-ref">Event hooks</span></a>, the listener functions should now expect
+the arguments to be passed in as keyword arguments. It&#8217;s also highly recommended to add an extra
+wildcard keyword arguments to listener functions, since they&#8217;re then less likely to break if extra
+arguments are added to that event in some future version. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">events</span>
+
+<span class="k">def</span> <span class="nf">on_request</span><span class="p">(</span><span class="n">request_type</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">response_time</span><span class="p">,</span> <span class="n">response_length</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="s2">&quot;Got request!&quot;</span>
+
+<span class="n">locust</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">request_success</span> <span class="o">+=</span> <span class="n">on_request</span>
+</pre></div>
+</div>
+<p>The <em>method</em> and <em>path</em> arguments to <code class="xref py py-obj docutils literal"><span class="pre">request_success</span></code> and
+<code class="xref py py-obj docutils literal"><span class="pre">request_failure</span></code> are now called <em>request_type</em> and <em>name</em>,
+since it&#8217;s less HTTP specific.</p>
+</div>
+<div class="section" id="other-changes">
+<h3>Other changes<a class="headerlink" href="#other-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>You can now specify the port on which to run the web host</li>
+<li>Various code cleanups</li>
+<li>Updated gevent/zmq libraries</li>
+<li>Switched to unittest2 discovery</li>
+<li>Added option &#8211;only-summary to only output the summary to the console, thus disabling the periodic stats output.</li>
+<li>Locust will now make sure to spawn all the specified locusts in distributed mode, not just a multiple of the number of slaves.</li>
+<li>Fixed the broken Vagrant example.</li>
+<li>Fixed the broken events example (events.py).</li>
+<li>Fixed issue where the request column was not sortable in the web-ui.</li>
+<li>Minor styling of the statistics table in the web-ui.</li>
+<li>Added options to specify host and ports in distributed mode using &#8211;master-host, &#8211;master-port for the slaves, &#8211;master-bind-host, &#8211;master-bind-port for the master.</li>
+<li>Removed previously deprecated and obsolete classes WebLocust and SubLocust.</li>
+<li>Fixed so that also failed requests count, when specifying a maximum number of requests on the command line</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>0.6.2<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Made Locust compatible with gevent 1.0rc2. This allows user to step around a problem
+with running Locust under some versions of CentOS, that can be fixed by upgrading
+gevent to 1.0.</li>
+<li>Added <code class="xref py py-attr docutils literal"><span class="pre">parent</span></code> attribute to TaskSet class that
+refers to the parent TaskSet, or Locust, instance. Contributed by Aaron Daubman.</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>0.6.1<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed bug that was causing problems when setting a maximum number of requests using the
+<strong>-n</strong> or <strong>&#8211;num-request</strong> command line parameter.</li>
+</ul>
+</div>
+<div class="section" id="id9">
+<h2>0.6<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This version comes with non backward compatible changes to the API.
+Anyone who is currently using existing locust scripts and want to upgrade to 0.6
+should read through these changes.</p>
+</div>
+<div class="section" id="sublocust-replaced-by-taskset-and-locust-class-behaviour-changed">
+<h3><code class="xref py py-class docutils literal"><span class="pre">SubLocust</span></code> replaced by <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> and <code class="xref py py-class docutils literal"><span class="pre">Locust</span></code> class behaviour changed<a class="headerlink" href="#sublocust-replaced-by-taskset-and-locust-class-behaviour-changed" title="Permalink to this headline">¶</a></h3>
+<p><code class="xref py py-class docutils literal"><span class="pre">Locust</span></code> classes does no longer control task scheduling and execution.
+Therefore, you no longer define tasks within Locust classes, instead the Locust class has a
+<code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> attribute which should point to a
+<code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> class. Tasks should now be defined in TaskSet
+classes, in the same way that was previously done in Locust and SubLocust classes. TaskSets can be
+nested just like SubLocust classes could.</p>
+<p>So the following code for 0.5.1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">120000</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">AboutPage</span><span class="p">(</span><span class="n">SubLocust</span><span class="p">):</span>
+        <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">10000</span>
+        <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">120000</span>
+
+        <span class="k">def</span> <span class="nf">on_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/&quot;</span><span class="p">)</span>
+
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">team_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/team/&quot;</span><span class="p">)</span>
+
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">press_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/press/&quot;</span><span class="p">)</span>
+
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Should now be written like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BrowsePage</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">AboutPage</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">on_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/&quot;</span><span class="p">)</span>
+
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">team_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/team/&quot;</span><span class="p">)</span>
+
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">press_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about/press/&quot;</span><span class="p">)</span>
+
+        <span class="nd">@task</span>
+        <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interrupt</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">120000</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">BrowsePage</span>
+</pre></div>
+</div>
+<p>Each TaskSet instance gets a <code class="xref py py-attr docutils literal"><span class="pre">locust</span></code> attribute, which refers to the
+Locust class.</p>
+</div>
+<div class="section" id="locust-now-uses-requests">
+<h3>Locust now uses Requests<a class="headerlink" href="#locust-now-uses-requests" title="Permalink to this headline">¶</a></h3>
+<p>Locust&#8217;s own HttpBrowser class (which was typically accessed through <em>self.client</em> from within a locust class)
+has been replaced by a thin wrapper around the requests library (<a class="reference external" href="http://python-requests.org">http://python-requests.org</a>). This comes with
+a number of advantages. Users can  now take advantage of a well documented, well written, fully fledged
+library for making HTTP requests. However, it also comes with some small API changes wich will require users
+to update their existing load testing scripts.</p>
+<div class="section" id="gzip-encoding-turned-on-by-default">
+<h4>Gzip encoding turned on by default<a class="headerlink" href="#gzip-encoding-turned-on-by-default" title="Permalink to this headline">¶</a></h4>
+<p>The HTTP client now sends headers for accepting gzip encoding by default. The <strong>&#8211;gzip</strong> command line argument
+has been removed and if someone want to disable the <em>Accept-Encoding</em> that the HTTP client uses, or any
+other HTTP headers you can do:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyWebUser</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Accept-Encoding&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="improved-http-client">
+<h4>Improved HTTP client<a class="headerlink" href="#improved-http-client" title="Permalink to this headline">¶</a></h4>
+<p>Because of the switch to using python-requests in the HTTP client, the API for the client has also
+gotten a few changes.</p>
+<ul>
+<li><p class="first">Additionally to the <code class="xref py py-meth docutils literal"><span class="pre">get</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">post</span></code>,
+<code class="xref py py-meth docutils literal"><span class="pre">put</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">delete</span></code> and
+<code class="xref py py-meth docutils literal"><span class="pre">head</span></code> methods, the <code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code> class
+now also has <code class="xref py py-meth docutils literal"><span class="pre">patch</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">options</span></code> methods.</p>
+</li>
+<li><p class="first">All arguments to the HTTP request methods, except for <strong>url</strong> and <strong>data</strong> should now be specified as keyword arguments.
+For example, previously one could specify headers using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/path&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span><span class="s2">&quot;locust&quot;</span><span class="p">})</span> <span class="c1"># this will no longer work</span>
+</pre></div>
+</div>
+<p>And should now be specified like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/path&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span><span class="s2">&quot;locust&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In general the whole HTTP client is now more powerful since it leverages on python-requests. Features that we&#8217;re
+now able to use in Locust includes file upload, SSL, connection keep-alive, and more.
+See the <a class="reference external" href="http://python-requests.org">python-requests documentation</a> for more details.</p>
+</li>
+<li><p class="first">The new <code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code> class&#8217; methods now return python-request
+<code class="xref py py-class docutils literal"><span class="pre">Response</span></code> objects. This means that accessing the content of the response
+is no longer made using the <strong>data</strong> attribute, but instead the <strong>content</strong> attribute. The HTTP response
+code is now accessed through the <strong>status_code</strong> attribute, instead of the <strong>code</strong> attribute.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="httpsession-methods-catch-response-argument-improved-and-allow-http-error-argument-removed">
+<h4>HttpSession methods&#8217; catch_response argument improved and allow_http_error argument removed<a class="headerlink" href="#httpsession-methods-catch-response-argument-improved-and-allow-http-error-argument-removed" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first">When doing HTTP requests using the <strong>catch_response</strong> argument, the context manager that is returned now
+provides two functions, <code class="xref py py-meth docutils literal"><span class="pre">success</span></code> and
+<code class="xref py py-meth docutils literal"><span class="pre">failure</span></code> that can be used to manually control
+what the request should be reported as in Locust&#8217;s statistics.</p>
+</li>
+<li><p class="first">The <strong>allow_http_error</strong> argument of the HTTP client&#8217;s methods has been removed. Instead one can use the
+<strong>catch_response</strong> argument to get a context manager, which can be used together with a with statement.</p>
+<p>The following code in the previous Locust version:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/does/not/exist&quot;</span><span class="p">,</span> <span class="n">allow_http_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Can instead now be written like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/does/not/exist&quot;</span><span class="p">,</span> <span class="n">catch_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">success</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="other-improvements-and-bug-fixes">
+<h3>Other improvements and bug fixes<a class="headerlink" href="#other-improvements-and-bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Scheduled task callables can now take keyword arguments and not only normal function arguments.</li>
+<li>SubLocust classes that are scheduled using <code class="xref py py-func docutils literal"><span class="pre">locust.core.Locust.schedule_task()</span></code> can now take
+arguments and keyword arguments (available in <em>self.args</em> and <em>self.kwargs</em>).</li>
+<li>Fixed bug where the average content size would be zero when doing requests against a server that
+didn&#8217;t set the content-length header (i.e. server that uses <em>Transfer-Encoding: chunked</em>)</li>
+</ul>
+</div>
+<div class="section" id="smaller-api-changes">
+<h3>Smaller API Changes<a class="headerlink" href="#smaller-api-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The <em>require_once</em> decorator has been removed. It was an old legacy function that no longer fit into
+the current way of writing Locust tests, where tasks are either methods under a Locust class or SubLocust
+classes containing task methods.</li>
+<li>Changed signature of <code class="xref py py-func docutils literal"><span class="pre">locust.core.Locust.schedule_task()</span></code>. Previously all extra arguments that
+was given to the method was passed on to the task when it was called. It no longer accepts extra arguments.
+Instead, it takes an <em>args</em> argument (list) and a <em>kwargs</em> argument (dict) which are be passed to the task when
+it&#8217;s called.</li>
+<li>Arguments for <code class="xref py py-class docutils literal"><span class="pre">request_success</span></code> event hook has been changed.
+Previously it took an HTTP Response instance as argument, but this has been changed to take the
+content-length of the response instead. This makes it easier to write custom clients for Locust.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>0.5.1<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fixed bug which caused &#8211;logfile and &#8211;loglevel command line parameters to not be respected when running
+locust without zeromq.</li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h2>0.5<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="api-changes">
+<h3>API changes<a class="headerlink" href="#api-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Web inteface is now turned on by default. The <strong>&#8211;web</strong> command line option has been replaced by &#8211;no-web.</li>
+<li><code class="xref py py-func docutils literal"><span class="pre">locust.events.request_success()</span></code>  and <code class="xref py py-func docutils literal"><span class="pre">locust.events.request_failure()</span></code> now gets the HTTP method as the first argument.</li>
+</ul>
+</div>
+<div class="section" id="improvements-and-bug-fixes">
+<h3>Improvements and bug fixes<a class="headerlink" href="#improvements-and-bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Removed <strong>&#8211;show-task-ratio-confluence</strong> and added a <strong>&#8211;show-task-ratio-json</strong> option instead. The
+<strong>&#8211;show-task-ratio-json</strong> will output JSON data containing the task execution ratio for the locust
+&#8220;brain&#8221;.</li>
+<li>The HTTP method used when a client requests a URL is now displayed in the web UI</li>
+<li>Some fixes and improvements in the stats exporting:</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>A file name is now set (using content-disposition header) when downloading stats.</li>
+<li>The order of the column headers for request stats was wrong.</li>
+<li>Thanks Benjamin W. Smith, Jussi Kuosa and Samuele Pedroni!</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id12">
+<h2>0.4<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>API changes<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>WebLocust class has been deprecated and is now called just Locust. The class that was previously
+called Locust is now called LocustBase.</li>
+<li>The <em>catch_http_error</em> argument to HttpClient.get() and HttpClient.post() has been renamed to
+<em>allow_http_error</em>.</li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h3>Improvements and bug fixes<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Locust now uses python&#8217;s logging module for all logging</li>
+<li>Added the ability to change the number of spawned users when a test is running, without having
+to restart the test.</li>
+<li>Experimental support for automatically ramping up and down the number of locust to find a maximum
+number of concurrent users (based on some parameters like response times and acceptable failure
+rate).</li>
+<li>Added support for failing requests based on the response data, even if the HTTP response was OK.</li>
+<li>Improved master node performance in order to not get bottlenecked when using enough slaves (&gt;100)</li>
+<li>Minor improvements in web interface.</li>
+<li>Fixed missing template dir in MANIFEST file causing locust installed with &#8220;setup.py install&#8221; not to work.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#id1">0.7.5</a></li>
+<li><a class="reference internal" href="#id2">0.7.4</a></li>
+<li><a class="reference internal" href="#id3">0.7.3</a></li>
+<li><a class="reference internal" href="#id4">0.7.2</a></li>
+<li><a class="reference internal" href="#id5">0.7.1</a></li>
+<li><a class="reference internal" href="#id6">0.7</a><ul>
+<li><a class="reference internal" href="#http-client-functionality-moved-to-httplocust">HTTP client functionality moved to HttpLocust</a></li>
+<li><a class="reference internal" href="#msgpack-for-serializing-master-slave-data">msgpack for serializing master/slave data</a></li>
+<li><a class="reference internal" href="#requests-updated-to-version-2-2">requests updated to version 2.2</a></li>
+<li><a class="reference internal" href="#gevent-updated-to-version-1-0">gevent updated to version 1.0</a></li>
+<li><a class="reference internal" href="#big-refactoring-of-request-statistics-code">Big refactoring of request statistics code</a></li>
+<li><a class="reference internal" href="#removed-support-for-avg-wait">Removed support for avg_wait</a></li>
+<li><a class="reference internal" href="#removed-support-for-ramping">Removed support for ramping</a></li>
+<li><a class="reference internal" href="#locust-event-hooks-now-takes-keyword-argument">Locust Event hooks now takes keyword argument</a></li>
+<li><a class="reference internal" href="#other-changes">Other changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">0.6.2</a></li>
+<li><a class="reference internal" href="#id8">0.6.1</a></li>
+<li><a class="reference internal" href="#id9">0.6</a><ul>
+<li><a class="reference internal" href="#sublocust-replaced-by-taskset-and-locust-class-behaviour-changed"><code class="docutils literal"><span class="pre">SubLocust</span></code> replaced by <code class="docutils literal"><span class="pre">TaskSet</span></code> and <code class="docutils literal"><span class="pre">Locust</span></code> class behaviour changed</a></li>
+<li><a class="reference internal" href="#locust-now-uses-requests">Locust now uses Requests</a><ul>
+<li><a class="reference internal" href="#gzip-encoding-turned-on-by-default">Gzip encoding turned on by default</a></li>
+<li><a class="reference internal" href="#improved-http-client">Improved HTTP client</a></li>
+<li><a class="reference internal" href="#httpsession-methods-catch-response-argument-improved-and-allow-http-error-argument-removed">HttpSession methods&#8217; catch_response argument improved and allow_http_error argument removed</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-improvements-and-bug-fixes">Other improvements and bug fixes</a></li>
+<li><a class="reference internal" href="#smaller-api-changes">Smaller API Changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id10">0.5.1</a></li>
+<li><a class="reference internal" href="#id11">0.5</a><ul>
+<li><a class="reference internal" href="#api-changes">API changes</a></li>
+<li><a class="reference internal" href="#improvements-and-bug-fixes">Improvements and bug fixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">0.4</a><ul>
+<li><a class="reference internal" href="#id13">API changes</a></li>
+<li><a class="reference internal" href="#id14">Improvements and bug fixes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="extending-locust.html" title="previous chapter">Extending Locust</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/changelog.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, gx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/changelog.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

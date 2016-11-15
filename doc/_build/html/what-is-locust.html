@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Locust 是什么? &#8212; lst 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Locust Documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="locust">
+<h1>Locust 是什么?<a class="headerlink" href="#locust" title="Permalink to this headline">¶</a></h1>
+<p>Locust 是一个易用的、分布式的用户负载测试工具。它用来对网站（或其他系统）进行负载测试，
+并且指出一个系统最多可以同时承载多大用户量。</p>
+<p>这个想法来源于在一次测试者，一大群 <a class="reference external" href="http://en.wikipedia.org/wiki/Locust">蝗虫</a> 会去攻击你的网站。
+每个蝗虫(或者测试用户，只要你愿意的话)的行为是由你定义，并且这些大量的进程都通过一个web界面实时监控。
+这将帮助你应对测试，并在开放给真实用户前定位代码中的瓶颈。</p>
+<p>Locust 是完全基于事件的，因此它可以在单一机器上支撑成千上万的并发用户。与很多其他基于事件的应用不同的
+是它不使用回调。取而代之的是使用轻量级进程 <a class="reference external" href="http://www.gevent.org/">gevent</a> 。每个locust涌向你的
+站点实际上是运行在它自己进程(或greenlet,也是对的)内部。这就允许你用Python写出复杂的场景，并且不需要
+通过回调来使你的代码的复杂化。</p>
+<div class="section" id="id2">
+<h2>特性<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>使用普通的 Python 来编写用户测试场景</strong></li>
+</ul>
+<blockquote>
+<div>不需要想你往常那样使用笨重的UI或者臃肿的XML代码。基于协同程序来代替回调，你的代码看起来就像普通的、阻塞
+的Python代码。</div></blockquote>
+<ul class="simple">
+<li><strong>分布式 &amp; 可扩展 - 支持数十万的用户</strong></li>
+</ul>
+<blockquote>
+<div>Locust 支持在在多个机器上分布式运行负载测试。
+基于事件特性，每个Locust节点可以在单个进程中支撑上千个用户。
+这背后的一部分原因是：及时你模拟了那么多用户，也并不是所有的都积极的命中你的系统。通常，用户在思考
+下一步做什么的时候都是空闲的。
+每秒请求数 != 用户在线数。</div></blockquote>
+<ul class="simple">
+<li><strong>基于Web的UI</strong></li>
+</ul>
+<blockquote>
+<div>Locust 有一个简洁的用户入口来实时展示测试相关的详细信息。并且从UI是基于Web的开始，它就是跨平台和易扩展的了。</div></blockquote>
+<ul class="simple">
+<li><strong>可以测试任何系统</strong></li>
+</ul>
+<blockquote>
+<div>即便Locust是面向Web的，它也可以用来测试几乎所有的系统。只要写一个你希望测试的客户端并使用蝗虫蜂拥而出！
+就是这么简单！</div></blockquote>
+<ul class="simple">
+<li><strong>Hackable</strong></li>
+</ul>
+<blockquote>
+<div>Locust 很小、非常有可控性，我们也打算保持这种方式。所有繁重的事件I/O和并发都交给gevent。其他可替代的测试工具的
+脆弱性是我们创造Locust的原因。</div></blockquote>
+</div>
+<div class="section" id="id3">
+<h2>背景<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Locust 之所以被创造是因为我们受够了所有现成的解决方案。它们中没有一个可以正确的解决问题，并且对我来说它们都忽略了关键的点。
+我们尝试了Apache JMeter 和 Tsung。两个工具都很好用，我们之前多次用来作为工作中的基准测试。
+JMeter带有一个UI界面，在最开始你可能以为是件好事，但很快你会意识到这是一个PITA(皮塔饼,是中东地区最常见的一种主食)用来通过
+一个指向-点击的接口来&#8221;编写&#8221;你的测试方案。其次，JMeter 是线程绑定的。这就意味着每一个你希望模拟的用户，你都需要一个独立的线程。
+不用说，在单个机器上基准测试上千个用户是不可行的。</p>
+<p>从另一方面来说，Tsung，由于是使用Erlang编写，所有没有这些线程问题。它可以使用由BEAM自身提供的轻量级进程，并且很容易扩展。但是
+当涉及到定义测试场景时，Tsung 就和 JMeter有同样的限制了。它提供了一个基于XML的DSL来定义一个用户在测试时候的行为。我猜你可以
+想象来&#8221;编码&#8221;这个是如何的恐怖。在完成是显示任何图像或者报告的分类都需要你对测试中产生的测试日志文件进行再处理。只有这样你才可以
+了解测试是如何进行的。</p>
+<p>无论如何，我们在尝试解决这些问题时创造了Locust，希望不要有任何一个上述的痛点存在。</p>
+<p>我猜你可以说我们已经准备好试着在这里解决我们的问题了。我们希望其他人能和我们一样发现它是很有用的。</p>
+</div>
+<div class="section" id="id4">
+<h2>作者<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://heyman.info">Jonatan Heyman</a> (<a class="reference external" href="http://twitter.com/jonatanheyman">&#64;jonatanheyman</a> on Twitter)</li>
+<li>Carl Byström (<a class="reference external" href="http://twitter.com/cgbystrom">&#64;cgbystrom</a> on Twitter)</li>
+<li>Joakim Hamrén (<a class="reference external" href="http://twitter.com/Jahaaja">&#64;Jahaaja</a> on Twitter)</li>
+<li>Hugo Heyman (<a class="reference external" href="http://twitter.com/hugoheyman">&#64;hugoheyman</a> on Twitter)</li>
+</ul>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>Open source licensed under the MIT license (see LICENSE file for details).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Locust 是什么?</a><ul>
+<li><a class="reference internal" href="#id2">特性</a></li>
+<li><a class="reference internal" href="#id3">背景</a></li>
+<li><a class="reference internal" href="#id4">作者</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Locust Documentation</a></li>
+      <li>Next: <a href="installation.html" title="next chapter">Installation</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/what-is-locust.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, gx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/what-is-locust.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

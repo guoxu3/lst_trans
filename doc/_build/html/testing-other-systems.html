@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Testing other systems using custom clients &#8212; lst 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Running Locust distributed" href="running-locust-distributed.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="testing-other-systems-using-custom-clients">
+<h1>Testing other systems using custom clients<a class="headerlink" href="#testing-other-systems-using-custom-clients" title="Permalink to this headline">¶</a></h1>
+<p>Locust was built with HTTP as its main target. However, it can easily be extended to load test
+any request/response based system, by writing a custom client that triggers
+<code class="xref py py-attr docutils literal"><span class="pre">request_success</span></code> and
+<code class="xref py py-attr docutils literal"><span class="pre">request_failure</span></code> events.</p>
+<div class="section" id="sample-xml-rpc-locust-client">
+<h2>Sample XML-RPC Locust client<a class="headerlink" href="#sample-xml-rpc-locust-client" title="Permalink to this headline">¶</a></h2>
+<p>Here is an example of a Locust class, <strong>XmlRpcLocust</strong>, which provides an XML-RPC client,
+<strong>XmlRpcClient</strong>, and tracks all requests made:</p>
+<p>If you&#8217;ve written Locust tests before, you&#8217;ll recognize the class called <em>ApiUser</em> which is a normal
+Locust class that has a <em>TaskSet</em> class with <em>tasks</em> in its <em>task_set</em> attribute. However, the <em>ApiUser</em>
+inherits from <em>XmlRpcLocust</em> that you can see right above ApiUser. The <em>XmlRpcLocust</em> class provides an
+instance of XmlRpcClient under the <em>client</em> attribute. The <em>XmlRpcClient</em> is a wrapper around the standard
+library&#8217;s <code class="xref py py-class docutils literal"><span class="pre">xmlrpclib.ServerProxy</span></code>. It  basically just proxies the function calls, but with the
+important addition of firing <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_success</span></code> and <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_failure</span></code>
+events, which will make all calls reported in Locust&#8217;s statistics.</p>
+<p>Here&#8217;s an implementation of an XML-RPC server that would work as a server for the code above:</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Testing other systems using custom clients</a><ul>
+<li><a class="reference internal" href="#sample-xml-rpc-locust-client">Sample XML-RPC Locust client</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="running-locust-distributed.html" title="previous chapter">Running Locust distributed</a></li>
+      <li>Next: <a href="api.html" title="next chapter">API</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/testing-other-systems.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, gx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/testing-other-systems.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API &#8212; lst 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Extending Locust" href="extending-locust.html" />
+    <link rel="prev" title="Testing other systems using custom clients" href="testing-other-systems.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="locust-class">
+<h2>Locust class<a class="headerlink" href="#locust-class" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="httplocust-class">
+<h2>HttpLocust class<a class="headerlink" href="#httplocust-class" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="taskset-class">
+<h2>TaskSet class<a class="headerlink" href="#taskset-class" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="task-decorator">
+<h2>task decorator<a class="headerlink" href="#task-decorator" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="httpsession-class">
+<h2>HttpSession class<a class="headerlink" href="#httpsession-class" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="response-class">
+<h2>Response class<a class="headerlink" href="#response-class" title="Permalink to this headline">¶</a></h2>
+<p>This class actually resides in the <a class="reference external" href="http://python-requests.org">python-requests</a> library,
+since that&#8217;s what Locust is using to make HTTP requests, but it&#8217;s included in the API docs
+for locust since it&#8217;s so central when writing locust load tests. You can also look at the
+<code class="xref py py-class docutils literal"><span class="pre">Response</span></code> class at the
+<a class="reference external" href="http://python-requests.org">requests documentation</a>.</p>
+</div>
+<div class="section" id="responsecontextmanager-class">
+<h2>ResponseContextManager class<a class="headerlink" href="#responsecontextmanager-class" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="interrupttaskset-exception">
+<h2>InterruptTaskSet Exception<a class="headerlink" href="#interrupttaskset-exception" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="event-hooks">
+<span id="events"></span><h2>Event hooks<a class="headerlink" href="#event-hooks" title="Permalink to this headline">¶</a></h2>
+<p>The event hooks are instances of the <strong>locust.events.EventHook</strong> class:</p>
+<div class="section" id="available-hooks">
+<h3>Available hooks<a class="headerlink" href="#available-hooks" title="Permalink to this headline">¶</a></h3>
+<p>The following event hooks are available under the <strong>locust.events</strong> module:</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">API</a><ul>
+<li><a class="reference internal" href="#locust-class">Locust class</a></li>
+<li><a class="reference internal" href="#httplocust-class">HttpLocust class</a></li>
+<li><a class="reference internal" href="#taskset-class">TaskSet class</a></li>
+<li><a class="reference internal" href="#task-decorator">task decorator</a></li>
+<li><a class="reference internal" href="#httpsession-class">HttpSession class</a></li>
+<li><a class="reference internal" href="#response-class">Response class</a></li>
+<li><a class="reference internal" href="#responsecontextmanager-class">ResponseContextManager class</a></li>
+<li><a class="reference internal" href="#interrupttaskset-exception">InterruptTaskSet Exception</a></li>
+<li><a class="reference internal" href="#event-hooks">Event hooks</a><ul>
+<li><a class="reference internal" href="#available-hooks">Available hooks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="testing-other-systems.html" title="previous chapter">Testing other systems using custom clients</a></li>
+      <li>Next: <a href="extending-locust.html" title="next chapter">Extending Locust</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, gx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/api.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

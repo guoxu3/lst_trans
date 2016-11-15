@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="cn">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quick start &#8212; lst 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Writing a locustfile" href="writing-a-locustfile.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quick-start">
+<h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="example-locustfile-py">
+<h2>Example locustfile.py<a class="headerlink" href="#example-locustfile-py" title="Permalink to this headline">¶</a></h2>
+<p>Below is a quick little example of a simple <strong>locustfile.py</strong>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">HttpLocust</span><span class="p">,</span> <span class="n">TaskSet</span>
+
+<span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span><span class="s2">&quot;ellen_key&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="s2">&quot;education&quot;</span><span class="p">})</span>
+
+<span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/profile&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">UserBehavior</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">login</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">WebsiteUser</span><span class="p">(</span><span class="n">HttpLocust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">UserBehavior</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">9000</span>
+</pre></div>
+</div>
+<p>Here we define a number of locust tasks, which are normal Python callables that take one argument
+(a Locust class instance). These tasks are gathered under a <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code>
+class in the <em>tasks</em> attribute. Then we have a <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> class which
+represents a User, where we define how long a simulated user should wait between executing tasks, as
+well as what TaskSet class should define the user&#8217;s &#8220;behaviour&#8221;. TaskSets can be nested.</p>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> class inherits from the
+<code class="xref py py-class docutils literal"><span class="pre">Locust</span></code> class, and it adds a client attribute which is an instance of
+<code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code>, that can be used to make HTTP requests.</p>
+<p>Another way we could declare tasks, which is usually more convenient, is to use the
+&#64;task decorator. The following code is equivalent to the above:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">HttpLocust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+
+<span class="k">class</span> <span class="nc">UserBehavior</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; on_start is called when a Locust start before any task is scheduled &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span><span class="s2">&quot;ellen_key&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="s2">&quot;education&quot;</span><span class="p">})</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/profile&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">WebsiteUser</span><span class="p">(</span><span class="n">HttpLocust</span><span class="p">):</span>
+    <span class="n">task_set</span> <span class="o">=</span> <span class="n">UserBehavior</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">9000</span>
+</pre></div>
+</div>
+<p>The Locust class (as well as HttpLocust, since it&#8217;s a subclass) also allows one to specify minimum
+and maximum wait time—per simulated user—between the execution of tasks (<em>min_wait</em> and <em>max_wait</em>)
+as well as other user behaviours.</p>
+</div>
+<div class="section" id="start-locust">
+<h2>Start Locust<a class="headerlink" href="#start-locust" title="Permalink to this headline">¶</a></h2>
+<p>To run Locust with the above locust file, if it was named <em>locustfile.py</em>, we could run
+(in the same directory as locustfile.py):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<p>or if the locust file is located elsewhere we could run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<p>To run Locust distributed across multiple processes we would start a master process by specifying &#8211;master:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">master</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<p>and then we would start an arbitrary number of slave processes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">slave</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<p>If we want to run locust distributed on multiple machines we would also have to specify the master host when
+starting the slaves (this is not needed when running locust distributed on a single machine, since the master
+host defaults to 127.0.0.1):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">slave</span> <span class="o">--</span><span class="n">master</span><span class="o">-</span><span class="n">host</span><span class="o">=</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">0.100</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>To see all available options type</p>
+<blockquote class="last">
+<div>locust &#8211;help</div></blockquote>
+</div>
+</div>
+<div class="section" id="open-up-locust-s-web-interface">
+<h2>Open up Locust&#8217;s web interface<a class="headerlink" href="#open-up-locust-s-web-interface" title="Permalink to this headline">¶</a></h2>
+<p>Once you&#8217;ve started Locust using one of the above command lines, you should open up a browser
+and point it to <a class="reference external" href="http://127.0.0.1:8089">http://127.0.0.1:8089</a> (if you are running Locust locally). Then you should be
+greeted with something like this:</p>
+<img alt="_images/webui-splash-screenshot.png" src="_images/webui-splash-screenshot.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quick start</a><ul>
+<li><a class="reference internal" href="#example-locustfile-py">Example locustfile.py</a></li>
+<li><a class="reference internal" href="#start-locust">Start Locust</a></li>
+<li><a class="reference internal" href="#open-up-locust-s-web-interface">Open up Locust&#8217;s web interface</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="writing-a-locustfile.html" title="next chapter">Writing a locustfile</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/quickstart.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, gx.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/quickstart.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
