@@ -1,78 +1,71 @@
-Installation
+安装
 ============
 
-Locust is available on PyPI and can be installed through pip or easy_install
+Locust 已经加入PyPI并且可以通过pip或easy_install安装
 
 ::
 
     pip install locustio
 
-or::
+或::
 
     easy_install locustio
 
-When Locust is installed, a **locust** command should be available in your shell (if you're not using 
-virtualenv—which you should—make sure your python script directory is on your path).
+当安装好Locust后，你的shell中就有一个 **locust** 命令了(如果你没有使用virtualenv-你可以使用-确保你的python脚本
+目录在你的系统路径中)
 
 To see available options, run::
 
     locust --help
 
 
-Supported Python Versions
+支持的 Python 版本
 -------------------------
 
-Locust requires **Python 2.6+**.  It is not currently compatible with Python 3.x.
+Locust 需要 **Python 2.6+** 版本.  目前还不兼容 Python 3.x 版本。
 
 
-Installing ZeroMQ
+安装 ZeroMQ
 -----------------
 
-If you intend to run Locust distributed across multiple processes/machines, we recommend you to also 
-install **pyzmq**::
+如果你想在多进程/机器上分布式运行Locust，我们推荐你同时安装上 **pyzmq**::
 
     pip install pyzmq
 
-or::
+或::
 
     easy_install pyzmq
 
-Installing Locust on Windows
+在Windows上安装 Locust
 ----------------------------
 
-The easiest way to get Locust running on Windows is to first install pre built binary packages for
-gevent and greenlet and then follow the above instructions. 
+最简单的让Locust在Windows上运行的方法是先安装goevnt和greenlet预先编译好的二进制包，然后按照上面的说明操作。
 
-You can find an unofficial collection of pre built python packages for windows here: 
+你在这里可以找到非官方的支持windows的预编译python包：
 `http://www.lfd.uci.edu/~gohlke/pythonlibs/ <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_
 
 .. note::
 
-    Running Locust on Windows should work fine for developing and testing your load testing 
-    scripts. However, when running large scale tests, it's recommended that you do that on 
-    Linux machines, since gevent's performance under Windows is poor.
+    在Windows上运行Locust进行开发和测试你的负载测试脚本是可以很好的工作的。但是，当运行大规模测试时，就
+    需要你在Linux机器上进行了，因为在Windows上gevent的性能是非常差的。
 
 
-Installing Locust on OS X
+在 OS X 上安装 Locust
 -------------------------
 
-The following is currently the shortest path to installing gevent on OS X using Homebrew.
+下面的是目前目前最快捷的方式来在OS X上使用Homebrew安装gevent。
 
-#. Install `Homebrew <http://mxcl.github.com/homebrew/>`_.
-#. Install libevent (dependency for gevent)::
+#. 安装 `Homebrew <http://mxcl.github.com/homebrew/>`_.
+#. 安装 libevent (gevent的依赖包)::
 
     brew install libevent
 
-#. Then follow the above instructions.
+#. 然后按照上面的说明操作。
 
-Increasing Maximum Number of Open Files Limit
+增大最大打开文件数量限制数
 ---------------------------------------------
 
-Every HTTP connection on a machine opens a new file (technically a file descriptor).
-Operating systems may set a low limit for the maximum number of files
-that can be open. If the limit is less than the number of simulated users in a test,
-failures will occur.
+在一个机器上的每一个HTTP连接都要打开一个新的文件(严格来说是一个文件描述符)。操作系统会为可以打开文件的最大数量设置一个
+比较地低的限制,如果这个限制比一次测试中模拟的用户数要小的话，就会出现故障。
 
-Increase the operating system's default maximum number of files limit to a number
-higher than the number of simulated users you'll want to run. How to do this depends
-on the operating system in use.
+增大操作系统默认的文件限制最大值到一个超过你想要模拟的的用户数的值。如何来操作取决于实用的操作系统。

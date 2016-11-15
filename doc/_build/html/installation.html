@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &#8212; lst 0.0.1 documentation</title>
+    <title>安装 &#8212; lst 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Quick start" href="quickstart.html" />
-    <link rel="prev" title="What is Locust?" href="what-is-locust.html" />
+    <link rel="prev" title="Locust 是什么?" href="what-is-locust.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -43,75 +43,68 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>Locust is available on PyPI and can be installed through pip or easy_install</p>
+  <div class="section" id="id1">
+<h1>安装<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Locust 已经加入PyPI并且可以通过pip或easy_install安装</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">locustio</span>
 </pre></div>
 </div>
-<p>or:</p>
+<p>或:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">easy_install</span> <span class="n">locustio</span>
 </pre></div>
 </div>
-<p>When Locust is installed, a <strong>locust</strong> command should be available in your shell (if you&#8217;re not using
-virtualenv—which you should—make sure your python script directory is on your path).</p>
+<p>当安装好Locust后，你的shell中就有一个 <strong>locust</strong> 命令了(如果你没有使用virtualenv-你可以使用-确保你的python脚本
+目录在你的系统路径中)</p>
 <p>To see available options, run:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
-<div class="section" id="supported-python-versions">
-<h2>Supported Python Versions<a class="headerlink" href="#supported-python-versions" title="Permalink to this headline">¶</a></h2>
-<p>Locust requires <strong>Python 2.6+</strong>.  It is not currently compatible with Python 3.x.</p>
+<div class="section" id="python">
+<h2>支持的 Python 版本<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>Locust 需要 <strong>Python 2.6+</strong> 版本.  目前还不兼容 Python 3.x 版本。</p>
 </div>
-<div class="section" id="installing-zeromq">
-<h2>Installing ZeroMQ<a class="headerlink" href="#installing-zeromq" title="Permalink to this headline">¶</a></h2>
-<p>If you intend to run Locust distributed across multiple processes/machines, we recommend you to also
-install <strong>pyzmq</strong>:</p>
+<div class="section" id="zeromq">
+<h2>安装 ZeroMQ<a class="headerlink" href="#zeromq" title="Permalink to this headline">¶</a></h2>
+<p>如果你想在多进程/机器上分布式运行Locust，我们推荐你同时安装上 <strong>pyzmq</strong>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyzmq</span>
 </pre></div>
 </div>
-<p>or:</p>
+<p>或:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">easy_install</span> <span class="n">pyzmq</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="installing-locust-on-windows">
-<h2>Installing Locust on Windows<a class="headerlink" href="#installing-locust-on-windows" title="Permalink to this headline">¶</a></h2>
-<p>The easiest way to get Locust running on Windows is to first install pre built binary packages for
-gevent and greenlet and then follow the above instructions.</p>
-<p>You can find an unofficial collection of pre built python packages for windows here:
+<div class="section" id="windows-locust">
+<h2>在Windows上安装 Locust<a class="headerlink" href="#windows-locust" title="Permalink to this headline">¶</a></h2>
+<p>最简单的让Locust在Windows上运行的方法是先安装goevnt和greenlet预先编译好的二进制包，然后按照上面的说明操作。</p>
+<p>你在这里可以找到非官方的支持windows的预编译python包：
 <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">http://www.lfd.uci.edu/~gohlke/pythonlibs/</a></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Running Locust on Windows should work fine for developing and testing your load testing
-scripts. However, when running large scale tests, it&#8217;s recommended that you do that on
-Linux machines, since gevent&#8217;s performance under Windows is poor.</p>
+<p class="last">在Windows上运行Locust进行开发和测试你的负载测试脚本是可以很好的工作的。但是，当运行大规模测试时，就
+需要你在Linux机器上进行了，因为在Windows上gevent的性能是非常差的。</p>
 </div>
 </div>
-<div class="section" id="installing-locust-on-os-x">
-<h2>Installing Locust on OS X<a class="headerlink" href="#installing-locust-on-os-x" title="Permalink to this headline">¶</a></h2>
-<p>The following is currently the shortest path to installing gevent on OS X using Homebrew.</p>
+<div class="section" id="os-x-locust">
+<h2>在 OS X 上安装 Locust<a class="headerlink" href="#os-x-locust" title="Permalink to this headline">¶</a></h2>
+<p>下面的是目前目前最快捷的方式来在OS X上使用Homebrew安装gevent。</p>
 <ol class="arabic">
-<li><p class="first">Install <a class="reference external" href="http://mxcl.github.com/homebrew/">Homebrew</a>.</p>
+<li><p class="first">安装 <a class="reference external" href="http://mxcl.github.com/homebrew/">Homebrew</a>.</p>
 </li>
-<li><p class="first">Install libevent (dependency for gevent):</p>
+<li><p class="first">安装 libevent (gevent的依赖包):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">libevent</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Then follow the above instructions.</p>
+<li><p class="first">然后按照上面的说明操作。</p>
 </li>
 </ol>
 </div>
-<div class="section" id="increasing-maximum-number-of-open-files-limit">
-<h2>Increasing Maximum Number of Open Files Limit<a class="headerlink" href="#increasing-maximum-number-of-open-files-limit" title="Permalink to this headline">¶</a></h2>
-<p>Every HTTP connection on a machine opens a new file (technically a file descriptor).
-Operating systems may set a low limit for the maximum number of files
-that can be open. If the limit is less than the number of simulated users in a test,
-failures will occur.</p>
-<p>Increase the operating system&#8217;s default maximum number of files limit to a number
-higher than the number of simulated users you&#8217;ll want to run. How to do this depends
-on the operating system in use.</p>
+<div class="section" id="id2">
+<h2>增大最大打开文件数量限制数<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>在一个机器上的每一个HTTP连接都要打开一个新的文件(严格来说是一个文件描述符)。操作系统会为可以打开文件的最大数量设置一个
+比较地低的限制,如果这个限制比一次测试中模拟的用户数要小的话，就会出现故障。</p>
+<p>增大操作系统默认的文件限制最大值到一个超过你想要模拟的的用户数的值。如何来操作取决于实用的操作系统。</p>
 </div>
 </div>
 
@@ -123,12 +116,12 @@ on the operating system in use.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Installation</a><ul>
-<li><a class="reference internal" href="#supported-python-versions">Supported Python Versions</a></li>
-<li><a class="reference internal" href="#installing-zeromq">Installing ZeroMQ</a></li>
-<li><a class="reference internal" href="#installing-locust-on-windows">Installing Locust on Windows</a></li>
-<li><a class="reference internal" href="#installing-locust-on-os-x">Installing Locust on OS X</a></li>
-<li><a class="reference internal" href="#increasing-maximum-number-of-open-files-limit">Increasing Maximum Number of Open Files Limit</a></li>
+<li><a class="reference internal" href="#">安装</a><ul>
+<li><a class="reference internal" href="#python">支持的 Python 版本</a></li>
+<li><a class="reference internal" href="#zeromq">安装 ZeroMQ</a></li>
+<li><a class="reference internal" href="#windows-locust">在Windows上安装 Locust</a></li>
+<li><a class="reference internal" href="#os-x-locust">在 OS X 上安装 Locust</a></li>
+<li><a class="reference internal" href="#id2">增大最大打开文件数量限制数</a></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +129,7 @@ on the operating system in use.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="what-is-locust.html" title="previous chapter">What is Locust?</a></li>
+      <li>Previous: <a href="what-is-locust.html" title="previous chapter">Locust 是什么?</a></li>
       <li>Next: <a href="quickstart.html" title="next chapter">Quick start</a></li>
   </ul></li>
 </ul>
