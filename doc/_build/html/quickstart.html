@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quick start &#8212; lst 0.0.1 documentation</title>
+    <title>快速开始 &#8212; lst 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Writing a locustfile" href="writing-a-locustfile.html" />
-    <link rel="prev" title="Installation" href="installation.html" />
+    <link rel="prev" title="安装" href="installation.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -43,11 +43,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="quick-start">
-<h1>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="example-locustfile-py">
-<h2>Example locustfile.py<a class="headerlink" href="#example-locustfile-py" title="Permalink to this headline">¶</a></h2>
-<p>Below is a quick little example of a simple <strong>locustfile.py</strong>:</p>
+  <div class="section" id="id1">
+<h1>快速开始<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="locustfile-py">
+<h2>locustfile.py 样例<a class="headerlink" href="#locustfile-py" title="Permalink to this headline">¶</a></h2>
+<p>下面是一个简单的 <strong>locustfile.py</strong> 小例子:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">HttpLocust</span><span class="p">,</span> <span class="n">TaskSet</span>
 
 <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
@@ -71,16 +71,12 @@
     <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">9000</span>
 </pre></div>
 </div>
-<p>Here we define a number of locust tasks, which are normal Python callables that take one argument
-(a Locust class instance). These tasks are gathered under a <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code>
-class in the <em>tasks</em> attribute. Then we have a <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> class which
-represents a User, where we define how long a simulated user should wait between executing tasks, as
-well as what TaskSet class should define the user&#8217;s &#8220;behaviour&#8221;. TaskSets can be nested.</p>
-<p>The <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> class inherits from the
-<code class="xref py py-class docutils literal"><span class="pre">Locust</span></code> class, and it adds a client attribute which is an instance of
-<code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code>, that can be used to make HTTP requests.</p>
-<p>Another way we could declare tasks, which is usually more convenient, is to use the
-&#64;task decorator. The following code is equivalent to the above:</p>
+<p>这里我们定义了一些可以被常规python调用的locust任务，它们接收一个参数(一个Locust类实例)。这些任务汇集在一个 <em>tasks</em>
+属性的 <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> 类下面。然后我们有一个:py:class:<cite>HttpLocust &lt;locust.core.HttpLocust&gt;</cite>
+类来代表一个用户，这里我们定义了一个模拟用户在执行任务之间等待多长时间以及哪个TaskSet类应该定义用户的&#8221;行为&#8221;。TaskSet是可以嵌套的。</p>
+<p><code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> 类继承自 <code class="xref py py-class docutils literal"><span class="pre">Locust</span></code> 类，并且增加了一个
+<code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code> 实例的client属性，可用于发起HTTP请求。</p>
+<p>另一个常用来定义任务的方式是使用&#64;task装饰器，下面的代码等同于上面的代码:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">HttpLocust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
 
 <span class="k">class</span> <span class="nc">UserBehavior</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
@@ -105,47 +101,43 @@ well as what TaskSet class should define the user&#8217;s &#8220;behaviour&#8221
     <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">9000</span>
 </pre></div>
 </div>
-<p>The Locust class (as well as HttpLocust, since it&#8217;s a subclass) also allows one to specify minimum
-and maximum wait time—per simulated user—between the execution of tasks (<em>min_wait</em> and <em>max_wait</em>)
-as well as other user behaviours.</p>
+<p>Locust类(以及HttpLocust,因为它是一个子类)也允许一个人去指定最大和最小等待时间-对每一个模拟用户-在执行任务
+的间隔(<em>min_wait</em> 和 <em>max_wait</em>)以及其他用户行为。</p>
 </div>
-<div class="section" id="start-locust">
-<h2>Start Locust<a class="headerlink" href="#start-locust" title="Permalink to this headline">¶</a></h2>
-<p>To run Locust with the above locust file, if it was named <em>locustfile.py</em>, we could run
-(in the same directory as locustfile.py):</p>
+<div class="section" id="locust">
+<h2>启动 Locust<a class="headerlink" href="#locust" title="Permalink to this headline">¶</a></h2>
+<p>使用上面的locust文件来运行Locust，如果文件名是*locustfile.py*,我们可以运行(在和locustfile.py同一目录下):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
 </pre></div>
 </div>
-<p>or if the locust file is located elsewhere we could run:</p>
+<p>或者如果locust文件在其他地方我们可以运行:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
 </pre></div>
 </div>
-<p>To run Locust distributed across multiple processes we would start a master process by specifying &#8211;master:</p>
+<p>在多个进程中分布式运行Locust我们可以通过指定 &#8211;master 来启动一个master进程:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">master</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
 </pre></div>
 </div>
-<p>and then we would start an arbitrary number of slave processes:</p>
+<p>然后我们可以启动任意数量的slave进程:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">slave</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
 </pre></div>
 </div>
-<p>If we want to run locust distributed on multiple machines we would also have to specify the master host when
-starting the slaves (this is not needed when running locust distributed on a single machine, since the master
-host defaults to 127.0.0.1):</p>
+<p>如果我们要在多个机器上分布式运行locust，我们还候需要在启动slave的时指定master的host(当在同一台机器上分布式运行locust的
+时候是不需要指定的，因为master 的host默认是127.0.01):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="o">../</span><span class="n">locust_files</span><span class="o">/</span><span class="n">my_locust_file</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">slave</span> <span class="o">--</span><span class="n">master</span><span class="o">-</span><span class="n">host</span><span class="o">=</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">0.100</span> <span class="o">--</span><span class="n">host</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>To see all available options type</p>
+<p>查看所有的可用参数类型</p>
 <blockquote class="last">
 <div>locust &#8211;help</div></blockquote>
 </div>
 </div>
-<div class="section" id="open-up-locust-s-web-interface">
-<h2>Open up Locust&#8217;s web interface<a class="headerlink" href="#open-up-locust-s-web-interface" title="Permalink to this headline">¶</a></h2>
-<p>Once you&#8217;ve started Locust using one of the above command lines, you should open up a browser
-and point it to <a class="reference external" href="http://127.0.0.1:8089">http://127.0.0.1:8089</a> (if you are running Locust locally). Then you should be
-greeted with something like this:</p>
+<div class="section" id="locustweb">
+<h2>开启Locust的web接口<a class="headerlink" href="#locustweb" title="Permalink to this headline">¶</a></h2>
+<p>当你采用上述的任意一种方式启动Locust，你就可以打开浏览器并指向http://127.0.0.1:8089(如果你是在本机运行Locust的话)。
+然后你就应该看到下图的样子：</p>
 <img alt="_images/webui-splash-screenshot.png" src="_images/webui-splash-screenshot.png" />
 </div>
 </div>
@@ -158,10 +150,10 @@ greeted with something like this:</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Quick start</a><ul>
-<li><a class="reference internal" href="#example-locustfile-py">Example locustfile.py</a></li>
-<li><a class="reference internal" href="#start-locust">Start Locust</a></li>
-<li><a class="reference internal" href="#open-up-locust-s-web-interface">Open up Locust&#8217;s web interface</a></li>
+<li><a class="reference internal" href="#">快速开始</a><ul>
+<li><a class="reference internal" href="#locustfile-py">locustfile.py 样例</a></li>
+<li><a class="reference internal" href="#locust">启动 Locust</a></li>
+<li><a class="reference internal" href="#locustweb">开启Locust的web接口</a></li>
 </ul>
 </li>
 </ul>
@@ -169,7 +161,7 @@ greeted with something like this:</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Previous: <a href="installation.html" title="previous chapter">安装</a></li>
       <li>Next: <a href="writing-a-locustfile.html" title="next chapter">Writing a locustfile</a></li>
   </ul></li>
 </ul>

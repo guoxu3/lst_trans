@@ -1,11 +1,11 @@
 =============
-Quick start
+快速开始
 =============
 
-Example locustfile.py
+locustfile.py 样例
 =====================
 
-Below is a quick little example of a simple **locustfile.py**::
+下面是一个简单的 **locustfile.py** 小例子::
 
     from locust import HttpLocust, TaskSet
     
@@ -30,18 +30,14 @@ Below is a quick little example of a simple **locustfile.py**::
         max_wait = 9000
     
 
-Here we define a number of locust tasks, which are normal Python callables that take one argument 
-(a Locust class instance). These tasks are gathered under a :py:class:`TaskSet <locust.core.TaskSet>` 
-class in the *tasks* attribute. Then we have a :py:class:`HttpLocust <locust.core.HttpLocust>` class which 
-represents a User, where we define how long a simulated user should wait between executing tasks, as 
-well as what TaskSet class should define the user's "behaviour". TaskSets can be nested.
+这里我们定义了一些可以被常规python调用的locust任务，它们接收一个参数(一个Locust类实例)。这些任务汇集在一个 *tasks*
+属性的 :py:class:`TaskSet <locust.core.TaskSet>` 类下面。然后我们有一个:py:class:`HttpLocust <locust.core.HttpLocust>`
+类来代表一个用户，这里我们定义了一个模拟用户在执行任务之间等待多长时间以及哪个TaskSet类应该定义用户的"行为"。TaskSet是可以嵌套的。
 
-The :py:class:`HttpLocust <locust.core.HttpLocust>` class inherits from the
-:py:class:`Locust <locust.core.Locust>` class, and it adds a client attribute which is an instance of 
-:py:class:`HttpSession <locust.clients.HttpSession>`, that can be used to make HTTP requests.
+:py:class:`HttpLocust <locust.core.HttpLocust>` 类继承自 :py:class:`Locust <locust.core.Locust>` 类，并且增加了一个
+:py:class:`HttpSession <locust.clients.HttpSession>` 实例的client属性，可用于发起HTTP请求。
 
-Another way we could declare tasks, which is usually more convenient, is to use the 
-@task decorator. The following code is equivalent to the above::
+另一个常用来定义任务的方式是使用@task装饰器，下面的代码等同于上面的代码::
 
     from locust import HttpLocust, TaskSet, task
     
@@ -66,49 +62,46 @@ Another way we could declare tasks, which is usually more convenient, is to use 
         min_wait = 5000
         max_wait = 9000
 
-The Locust class (as well as HttpLocust, since it's a subclass) also allows one to specify minimum 
-and maximum wait time—per simulated user—between the execution of tasks (*min_wait* and *max_wait*) 
-as well as other user behaviours.
+Locust类(以及HttpLocust,因为它是一个子类)也允许一个人去指定最大和最小等待时间-对每一个模拟用户-在执行任务
+的间隔(*min_wait* 和 *max_wait*)以及其他用户行为。
 
 
-Start Locust
+启动 Locust
 ============
 
-To run Locust with the above locust file, if it was named *locustfile.py*, we could run 
-(in the same directory as locustfile.py)::
+使用上面的locust文件来运行Locust，如果文件名是*locustfile.py*,我们可以运行(在和locustfile.py同一目录下)::
 
     locust --host=http://example.com
 
-or if the locust file is located elsewhere we could run::
+或者如果locust文件在其他地方我们可以运行::
 
     locust -f ../locust_files/my_locust_file.py --host=http://example.com
 
-To run Locust distributed across multiple processes we would start a master process by specifying --master::
+在多个进程中分布式运行Locust我们可以通过指定 --master 来启动一个master进程::
 
     locust -f ../locust_files/my_locust_file.py --master --host=http://example.com
 
-and then we would start an arbitrary number of slave processes::
+然后我们可以启动任意数量的slave进程::
 
     locust -f ../locust_files/my_locust_file.py --slave --host=http://example.com
 
-If we want to run locust distributed on multiple machines we would also have to specify the master host when
-starting the slaves (this is not needed when running locust distributed on a single machine, since the master 
-host defaults to 127.0.0.1)::
+如果我们要在多个机器上分布式运行locust，我们还候需要在启动slave的时指定master的host(当在同一台机器上分布式运行locust的
+时候是不需要指定的，因为master 的host默认是127.0.01)::
+
 
     locust -f ../locust_files/my_locust_file.py --slave --master-host=192.168.0.100 --host=http://example.com
 
 .. note::
 
-    To see all available options type
+    查看所有的可用参数类型
     
         locust --help
     
 
-Open up Locust's web interface
+开启Locust的web接口
 ==============================
 
-Once you've started Locust using one of the above command lines, you should open up a browser 
-and point it to http://127.0.0.1:8089 (if you are running Locust locally). Then you should be 
-greeted with something like this:
+当你采用上述的任意一种方式启动Locust，你就可以打开浏览器并指向http://127.0.0.1:8089(如果你是在本机运行Locust的话)。
+然后你就应该看到下图的样子：
 
 .. image:: images/webui-splash-screenshot.png
