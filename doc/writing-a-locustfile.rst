@@ -1,25 +1,24 @@
 ======================
-Writing a locustfile
+编写 locustfile
 ======================
 
+locustfile 是一个普通的python文件。唯一必须的是它要定义至少一个类-然我们叫它locust类-这个类继承自Locust类。
 A locustfile is a normal python file. The only requirement is that it declares at least one class—
 let's call it the locust class—that inherits from the class Locust. 
 
-The Locust class
+Locust 类
 ================
 
-A locust class represents one user (or a swarming locust if you will). Locust will spawn (hatch) one 
-instance of the locust class for each user that is being simulated. There are a few attributes that 
-a locust class should typically define. 
+一个locust类代表了一个用户(如果你愿意的话也可以是一个蝗虫)。Locust会为每一个模拟的用户产生(孵化)
+出一个locust类的实例，一个locust类通常会定义几个属性。
 
-The :py:attr:`task_set <locust.core.Locust.task_set>` attribute
+:py:attr:`task_set <locust.core.Locust.task_set>` 属性
 ---------------------------------------------------------------
 
-The :py:attr:`task_set <locust.core.Locust.task_set>` attribute should point to a 
-:py:class:`TaskSet <locust.core.TaskSet>` class which defines the behaviour of the user and 
-is described in more details below.
+:py:attr:`task_set <locust.core.Locust.task_set>` 属性需要指向一个
+:py:class:`TaskSet <locust.core.TaskSet>` 类，这个类定义了用户的行为，下面会有想象的描述。
 
-The *min_wait* and *max_wait* attributes
+*min_wait* 和 *max_wait* 属性
 ----------------------------------------
 
 Additionally to the task_set attribute, one usually want to declare the *min_wait* and *max_wait* 
