@@ -21,12 +21,11 @@ Locust 类
 *min_wait* 和 *max_wait* 属性
 ----------------------------------------
 
-Additionally to the task_set attribute, one usually want to declare the *min_wait* and *max_wait* 
-attributes. These are the minimum and maximum time, in milliseconds, that a simulated user will wait 
-between executing each task. *min_wait* and *max_wait* default to 1000, and therefore a locust will 
-always wait 1 second between each task if *min_wait* and *max_wait* are not declared.
+除了task_set属性之外，通常还要定义*min_wait* 和 *max_wait* 属性。他们是一个模拟用户在执行每个任务之间
+需要等待最小和最大时间，单位是毫秒。*min_wait* 和 *max_wait* 默认值为1000，因此每个蝗虫总是在每个任务
+之间总是会等待1秒，如果*min_wait* and *max_wait* 没有定义的话。
 
-With the following locustfile, each user would wait between 5 and 15 seconds between tasks::
+根据如下的locustfile，每个用户在任务之间会等待5至15秒::
 
     from locust import Locust, TaskSet, task
     
@@ -40,17 +39,16 @@ With the following locustfile, each user would wait between 5 and 15 seconds bet
         min_wait = 5000
         max_wait = 15000
 
-The *min_wait* and *max_wait* attributes can also be overridden in a TaskSet class.
+*min_wait* 和 *max_wait* 属性都可以在TaskSet类中被覆盖。
 
-The *weight* attribute
+*weight* 属性
 ----------------------
 
-You can run two locusts from the same file like so::
+你可以在同一个文件中运行两个蝗虫，像这样::
 
     locust -f locust_file.py WebUserLocust MobileUserLocust
 
-If you wish to make one of these locusts execute more often you can set a weight attribute on those
-classes. Say for example, web users are three times more likely than mobile users::
+如果你希望其中一个蝗虫执行更多次数，你可以在那些类里设置一个权重属性。比如说，网页用户可能是移动端用户的三倍::
 
     class WebUserLocust(Locust):
         weight = 3
@@ -61,39 +59,32 @@ classes. Say for example, web users are three times more likely than mobile user
         ....
 
 
-The *host* attribute
+*host* 属性
 --------------------
 
-The host attribute is a URL prefix (i.e. "http://google.com") to the host that is to be loaded. 
-Usually, this is specified on the command line, using the :code:`--host` option, when locust is started. 
-If one declares a host attribute in the locust class, it will be used in the case when no :code:`--host` 
-is specified on the command line.
+host属性是需要被加载的主机的URL前缀(即 "http://google.com")。通常，这个在locust启动时在命令行指定，
+使用 :code:`--host` 选项。如果在locust类中定义的host属性，当没有在命令行指定:code:`--host` 时就会使用。
 
-
-TaskSet class
+TaskSet 类
 =============
 
-If the Locust class represents a swarming locust, you could say that the TaskSet class represents 
-the brain of the locust. Each Locust class must have a *task_set* attribute set, that points to 
-a TaskSet.
+如果Locust类代表了一个蝗虫，你可以说TaskSet类代表了蝗虫的大脑。每个Locust类必须有一个*task_set*属性集，
+指向一个TaskSet。
 
-A TaskSet is, like its name suggests, a collection of tasks. These tasks are normal python callables 
-and—if we were load-testing an auction website—could do stuff like "loading the start page", 
-"searching for some product" and "making a bid". 
+一个TaskSet就是，就像它的名字所示的，一个任务的集合。这些任务是普通的可调用的python-如果我们是加载-测试一个
+竞拍网站-可以做一些"加载开始页面"，"搜索某些商品"以及"出价"之类的事情。
 
-When a load test is started, each instance of the spawned Locust classes will start executing their 
-TaskSet. What happens then is that each TaskSet will pick one of its tasks and call it. It will then 
-wait a number of milliseconds, chosen at random between the Locust class' *min_wait* and *max_wait* attributes 
-(unless min_wait/max_wait has been defined directly under the TaskSet, in which case it will use 
-its own values instead). Then it will again pick a new task which will be called, then wait again, 
-and so on.
+当一个负载测试开始后，所产生的每一个Locust类将开始执行它们的TaskSet。接下来发生的就是每个TaskSet将要选择其中
+一个任务并调用。然后会等待的好秒数是在Locust 类的 *min_wait* and *max_wait* 属性中选择的一个随机数
+(除非min_wait/max_wait已经在TaskSet中直接定义了，这种情况下将使用它本身的值)。然后有会选择一个新的任务来调用，
+然后又等待，如此往复。
 
-Declaring tasks
+声明 tasks
 ---------------
 
-The typical way of declaring tasks for a TaskSet it to use the :py:meth:`task <locust.core.task>` decorator.
+典型的为一个TaskSet声明tasks使用:py:meth:`task <locust.core.task>` 装饰器。
 
-Here is an example::
+这是一个例子::
 
     from locust import Locust, TaskSet, task
     
@@ -105,9 +96,8 @@ Here is an example::
     class MyLocust(Locust):
         task_set = MyTaskSet
 
-**@task** takes an optional weight argument that can be used to specify the tasks' execution ratio. In 
-the following example *task2* will be executed twice as much as *task1*::
-    
+ **@task** 需要一个可选的权重参数，可以用来指定任务的执行率。在下面的例子中 *task2* 执行次数将会是 *task1* 两倍::
+
     from locust import Locust, TaskSet, task
     
     class MyTaskSet(TaskSet):
@@ -126,14 +116,13 @@ the following example *task2* will be executed twice as much as *task1*::
         task_set = MyTaskSet
 
 
-tasks attribute
+tasks 属性
 --------------
 
-Using the @task decorator to declare tasks is a convenience, and usually that's the best way to do 
-it. However, it's also possible to define the tasks of a TaskSet by setting the 
-:py:attr:`tasks <locust.core.TaskSet.tasks>` attribute (using the @task decorator will actually 
-just populate the *tasks* attribute).
+使用@task装饰来定义tasks是一个方便的，通常也是最好的方式。然而，也可以通过设置 :py:attr:`tasks <locust.core.TaskSet.tasks>`
+属性来定义一个TaskSet的tasks(使用@task装饰器会只填充*tasks*属性)。
 
+*tasks*属性既是一个python可调用的列表，也是一个*<callable : int>*字典。tasks是可调用的python，它接收一个参数-
 The *tasks* attribute is either a list of python callables, or a *<callable : int>* dict. 
 The tasks are python callables that receive one argument—the TaskSet class instance that is executing 
 the task. Here is an extremely simple example of a locustfile (this locustfile won't actually load test anything)::

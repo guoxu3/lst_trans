@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Writing a locustfile &#8212; lst 0.0.1 documentation</title>
+    <title>编写 locustfile &#8212; lst 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Running Locust distributed" href="running-locust-distributed.html" />
-    <link rel="prev" title="Quick start" href="quickstart.html" />
+    <link rel="prev" title="快速开始" href="quickstart.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -43,28 +43,26 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="writing-a-locustfile">
-<h1>Writing a locustfile<a class="headerlink" href="#writing-a-locustfile" title="Permalink to this headline">¶</a></h1>
-<p>A locustfile is a normal python file. The only requirement is that it declares at least one class—
+  <div class="section" id="locustfile">
+<h1>编写 locustfile<a class="headerlink" href="#locustfile" title="Permalink to this headline">¶</a></h1>
+<p>locustfile 是一个普通的python文件。唯一必须的是它要定义至少一个类-然我们叫它locust类-这个类继承自Locust类。
+A locustfile is a normal python file. The only requirement is that it declares at least one class—
 let&#8217;s call it the locust class—that inherits from the class Locust.</p>
-<div class="section" id="the-locust-class">
-<h2>The Locust class<a class="headerlink" href="#the-locust-class" title="Permalink to this headline">¶</a></h2>
-<p>A locust class represents one user (or a swarming locust if you will). Locust will spawn (hatch) one
-instance of the locust class for each user that is being simulated. There are a few attributes that
-a locust class should typically define.</p>
-<div class="section" id="the-task-set-attribute">
-<h3>The <code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> attribute<a class="headerlink" href="#the-task-set-attribute" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> attribute should point to a
-<code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> class which defines the behaviour of the user and
-is described in more details below.</p>
+<div class="section" id="locust">
+<h2>Locust 类<a class="headerlink" href="#locust" title="Permalink to this headline">¶</a></h2>
+<p>一个locust类代表了一个用户(如果你愿意的话也可以是一个蝗虫)。Locust会为每一个模拟的用户产生(孵化)
+出一个locust类的实例，一个locust类通常会定义几个属性。</p>
+<div class="section" id="task-set">
+<h3><code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> 属性<a class="headerlink" href="#task-set" title="Permalink to this headline">¶</a></h3>
+<p><code class="xref py py-attr docutils literal"><span class="pre">task_set</span></code> 属性需要指向一个
+<code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> 类，这个类定义了用户的行为，下面会有想象的描述。</p>
 </div>
-<div class="section" id="the-min-wait-and-max-wait-attributes">
-<h3>The <em>min_wait</em> and <em>max_wait</em> attributes<a class="headerlink" href="#the-min-wait-and-max-wait-attributes" title="Permalink to this headline">¶</a></h3>
-<p>Additionally to the task_set attribute, one usually want to declare the <em>min_wait</em> and <em>max_wait</em>
-attributes. These are the minimum and maximum time, in milliseconds, that a simulated user will wait
-between executing each task. <em>min_wait</em> and <em>max_wait</em> default to 1000, and therefore a locust will
-always wait 1 second between each task if <em>min_wait</em> and <em>max_wait</em> are not declared.</p>
-<p>With the following locustfile, each user would wait between 5 and 15 seconds between tasks:</p>
+<div class="section" id="min-wait-max-wait">
+<h3><em>min_wait</em> 和 <em>max_wait</em> 属性<a class="headerlink" href="#min-wait-max-wait" title="Permalink to this headline">¶</a></h3>
+<p>除了task_set属性之外，通常还要定义*min_wait* 和 <em>max_wait</em> 属性。他们是一个模拟用户在执行每个任务之间
+需要等待最小和最大时间，单位是毫秒。<em>min_wait</em> 和 <em>max_wait</em> 默认值为1000，因此每个蝗虫总是在每个任务
+之间总是会等待1秒，如果*min_wait* and <em>max_wait</em> 没有定义的话。</p>
+<p>根据如下的locustfile，每个用户在任务之间会等待5至15秒:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
 
 <span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
@@ -78,16 +76,15 @@ always wait 1 second between each task if <em>min_wait</em> and <em>max_wait</em
     <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">15000</span>
 </pre></div>
 </div>
-<p>The <em>min_wait</em> and <em>max_wait</em> attributes can also be overridden in a TaskSet class.</p>
+<p><em>min_wait</em> 和 <em>max_wait</em> 属性都可以在TaskSet类中被覆盖。</p>
 </div>
-<div class="section" id="the-weight-attribute">
-<h3>The <em>weight</em> attribute<a class="headerlink" href="#the-weight-attribute" title="Permalink to this headline">¶</a></h3>
-<p>You can run two locusts from the same file like so:</p>
+<div class="section" id="weight">
+<h3><em>weight</em> 属性<a class="headerlink" href="#weight" title="Permalink to this headline">¶</a></h3>
+<p>你可以在同一个文件中运行两个蝗虫，像这样:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">locust</span> <span class="o">-</span><span class="n">f</span> <span class="n">locust_file</span><span class="o">.</span><span class="n">py</span> <span class="n">WebUserLocust</span> <span class="n">MobileUserLocust</span>
 </pre></div>
 </div>
-<p>If you wish to make one of these locusts execute more often you can set a weight attribute on those
-classes. Say for example, web users are three times more likely than mobile users:</p>
+<p>如果你希望其中一个蝗虫执行更多次数，你可以在那些类里设置一个权重属性。比如说，网页用户可能是移动端用户的三倍:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WebUserLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="o">....</span>
@@ -98,71 +95,63 @@ classes. Say for example, web users are three times more likely than mobile user
 </pre></div>
 </div>
 </div>
-<div class="section" id="the-host-attribute">
-<h3>The <em>host</em> attribute<a class="headerlink" href="#the-host-attribute" title="Permalink to this headline">¶</a></h3>
-<p>The host attribute is a URL prefix (i.e. &#8220;<a class="reference external" href="http://google.com">http://google.com</a>&#8221;) to the host that is to be loaded.
-Usually, this is specified on the command line, using the <code class="code docutils literal"><span class="pre">--host</span></code> option, when locust is started.
-If one declares a host attribute in the locust class, it will be used in the case when no <code class="code docutils literal"><span class="pre">--host</span></code>
-is specified on the command line.</p>
+<div class="section" id="host">
+<h3><em>host</em> 属性<a class="headerlink" href="#host" title="Permalink to this headline">¶</a></h3>
+<p>host属性是需要被加载的主机的URL前缀(即 &#8220;<a class="reference external" href="http://google.com">http://google.com</a>&#8221;)。通常，这个在locust启动时在命令行指定，
+使用 <code class="code docutils literal"><span class="pre">--host</span></code> 选项。如果在locust类中定义的host属性，当没有在命令行指定:code:<cite>&#8211;host</cite> 时就会使用。</p>
 </div>
 </div>
-<div class="section" id="taskset-class">
-<h2>TaskSet class<a class="headerlink" href="#taskset-class" title="Permalink to this headline">¶</a></h2>
-<p>If the Locust class represents a swarming locust, you could say that the TaskSet class represents
-the brain of the locust. Each Locust class must have a <em>task_set</em> attribute set, that points to
-a TaskSet.</p>
-<p>A TaskSet is, like its name suggests, a collection of tasks. These tasks are normal python callables
-and—if we were load-testing an auction website—could do stuff like &#8220;loading the start page&#8221;,
-&#8220;searching for some product&#8221; and &#8220;making a bid&#8221;.</p>
-<p>When a load test is started, each instance of the spawned Locust classes will start executing their
-TaskSet. What happens then is that each TaskSet will pick one of its tasks and call it. It will then
-wait a number of milliseconds, chosen at random between the Locust class&#8217; <em>min_wait</em> and <em>max_wait</em> attributes
-(unless min_wait/max_wait has been defined directly under the TaskSet, in which case it will use
-its own values instead). Then it will again pick a new task which will be called, then wait again,
-and so on.</p>
-<div class="section" id="declaring-tasks">
-<h3>Declaring tasks<a class="headerlink" href="#declaring-tasks" title="Permalink to this headline">¶</a></h3>
-<p>The typical way of declaring tasks for a TaskSet it to use the <code class="xref py py-meth docutils literal"><span class="pre">task</span></code> decorator.</p>
-<p>Here is an example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+<div class="section" id="taskset">
+<h2>TaskSet 类<a class="headerlink" href="#taskset" title="Permalink to this headline">¶</a></h2>
+<p>如果Locust类代表了一个蝗虫，你可以说TaskSet类代表了蝗虫的大脑。每个Locust类必须有一个*task_set*属性集，
+指向一个TaskSet。</p>
+<p>一个TaskSet就是，就像它的名字所示的，一个任务的集合。这些任务是普通的可调用的python-如果我们是加载-测试一个
+竞拍网站-可以做一些&#8221;加载开始页面&#8221;，&#8221;搜索某些商品&#8221;以及&#8221;出价&#8221;之类的事情。</p>
+<p>当一个负载测试开始后，所产生的每一个Locust类将开始执行它们的TaskSet。接下来发生的就是每个TaskSet将要选择其中
+一个任务并调用。然后会等待的好秒数是在Locust 类的 <em>min_wait</em> and <em>max_wait</em> 属性中选择的一个随机数
+(除非min_wait/max_wait已经在TaskSet中直接定义了，这种情况下将使用它本身的值)。然后有会选择一个新的任务来调用，
+然后又等待，如此往复。</p>
+<div class="section" id="tasks">
+<h3>声明 tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h3>
+<p>典型的为一个TaskSet声明tasks使用:py:meth:<cite>task &lt;locust.core.task&gt;</cite> 装饰器。</p>
+<p>这是一个例子:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>   from locust import Locust, TaskSet, task
 
-<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
-    <span class="nd">@task</span>
-    <span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span> <span class="s2">&quot;Locust instance (</span><span class="si">%r</span><span class="s2">) executing my_task&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locust</span><span class="p">)</span>
+   class MyTaskSet(TaskSet):
+       @task
+       def my_task(self):
+           print &quot;Locust instance (%r) executing my_task&quot; % (self.locust)
 
-<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
-    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
-</pre></div>
-</div>
-<p><strong>&#64;task</strong> takes an optional weight argument that can be used to specify the tasks&#8217; execution ratio. In
-the following example <em>task2</em> will be executed twice as much as <em>task1</em>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
+   class MyLocust(Locust):
+       task_set = MyTaskSet
 
-<span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
-    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">5000</span>
-    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">15000</span>
+**@task** 需要一个可选的权重参数，可以用来指定任务的执行率。在下面的例子中 *task2* 执行次数将会是 *task1* 两倍::
 
-    <span class="nd">@task</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">task1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+   from locust import Locust, TaskSet, task
 
-    <span class="nd">@task</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">task2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+   class MyTaskSet(TaskSet):
+       min_wait = 5000
+       max_wait = 15000
 
-<span class="k">class</span> <span class="nc">MyLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
-    <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
+       @task(3)
+       def task1(self):
+           pass
+
+       @task(6)
+       def task2(self):
+           pass
+
+   class MyLocust(Locust):
+       task_set = MyTaskSet
 </pre></div>
 </div>
 </div>
-<div class="section" id="tasks-attribute">
-<h3>tasks attribute<a class="headerlink" href="#tasks-attribute" title="Permalink to this headline">¶</a></h3>
-<p>Using the &#64;task decorator to declare tasks is a convenience, and usually that&#8217;s the best way to do
-it. However, it&#8217;s also possible to define the tasks of a TaskSet by setting the
-<code class="xref py py-attr docutils literal"><span class="pre">tasks</span></code> attribute (using the &#64;task decorator will actually
-just populate the <em>tasks</em> attribute).</p>
-<p>The <em>tasks</em> attribute is either a list of python callables, or a <em>&lt;callable : int&gt;</em> dict.
+<div class="section" id="id1">
+<h3>tasks 属性<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>使用&#64;task装饰来定义tasks是一个方便的，通常也是最好的方式。然而，也可以通过设置 <code class="xref py py-attr docutils literal"><span class="pre">tasks</span></code>
+属性来定义一个TaskSet的tasks(使用&#64;task装饰器会只填充*tasks*属性)。</p>
+<p><em>tasks*属性既是一个python可调用的列表，也是一个*&lt;callable : int&gt;*字典。tasks是可调用的python，它接收一个参数-
+The *tasks</em> attribute is either a list of python callables, or a <em>&lt;callable : int&gt;</em> dict.
 The tasks are python callables that receive one argument—the TaskSet class instance that is executing
 the task. Here is an extremely simple example of a locustfile (this locustfile won&#8217;t actually load test anything):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span>
@@ -397,17 +386,17 @@ different request methods.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Writing a locustfile</a><ul>
-<li><a class="reference internal" href="#the-locust-class">The Locust class</a><ul>
-<li><a class="reference internal" href="#the-task-set-attribute">The <code class="docutils literal"><span class="pre">task_set</span></code> attribute</a></li>
-<li><a class="reference internal" href="#the-min-wait-and-max-wait-attributes">The <em>min_wait</em> and <em>max_wait</em> attributes</a></li>
-<li><a class="reference internal" href="#the-weight-attribute">The <em>weight</em> attribute</a></li>
-<li><a class="reference internal" href="#the-host-attribute">The <em>host</em> attribute</a></li>
+<li><a class="reference internal" href="#">编写 locustfile</a><ul>
+<li><a class="reference internal" href="#locust">Locust 类</a><ul>
+<li><a class="reference internal" href="#task-set"><code class="docutils literal"><span class="pre">task_set</span></code> 属性</a></li>
+<li><a class="reference internal" href="#min-wait-max-wait"><em>min_wait</em> 和 <em>max_wait</em> 属性</a></li>
+<li><a class="reference internal" href="#weight"><em>weight</em> 属性</a></li>
+<li><a class="reference internal" href="#host"><em>host</em> 属性</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#taskset-class">TaskSet class</a><ul>
-<li><a class="reference internal" href="#declaring-tasks">Declaring tasks</a></li>
-<li><a class="reference internal" href="#tasks-attribute">tasks attribute</a></li>
+<li><a class="reference internal" href="#taskset">TaskSet 类</a><ul>
+<li><a class="reference internal" href="#tasks">声明 tasks</a></li>
+<li><a class="reference internal" href="#id1">tasks 属性</a></li>
 <li><a class="reference internal" href="#tasksets-can-be-nested">TaskSets can be nested</a></li>
 <li><a class="reference internal" href="#the-on-start-function">The on_start function</a></li>
 <li><a class="reference internal" href="#referencing-the-locust-instance-or-the-parent-taskset-instance">Referencing the Locust instance, or the parent TaskSet instance</a></li>
@@ -427,7 +416,7 @@ different request methods.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="quickstart.html" title="previous chapter">Quick start</a></li>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">快速开始</a></li>
       <li>Next: <a href="running-locust-distributed.html" title="next chapter">Running Locust distributed</a></li>
   </ul></li>
 </ul>
