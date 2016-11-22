@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Testing other systems using custom clients &#8212; lst 0.0.1 documentation</title>
+    <title>使用自定义客户端测试其他系统 &#8212; lst 0.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="lst 0.0.1 documentation" href="index.html" />
     <link rel="next" title="API" href="api.html" />
-    <link rel="prev" title="Running Locust distributed" href="running-locust-distributed.html" />
+    <link rel="prev" title="分布式运行 Locust" href="running-locust-distributed.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -43,24 +43,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="testing-other-systems-using-custom-clients">
-<h1>Testing other systems using custom clients<a class="headerlink" href="#testing-other-systems-using-custom-clients" title="Permalink to this headline">¶</a></h1>
-<p>Locust was built with HTTP as its main target. However, it can easily be extended to load test
-any request/response based system, by writing a custom client that triggers
-<code class="xref py py-attr docutils literal"><span class="pre">request_success</span></code> and
-<code class="xref py py-attr docutils literal"><span class="pre">request_failure</span></code> events.</p>
-<div class="section" id="sample-xml-rpc-locust-client">
-<h2>Sample XML-RPC Locust client<a class="headerlink" href="#sample-xml-rpc-locust-client" title="Permalink to this headline">¶</a></h2>
-<p>Here is an example of a Locust class, <strong>XmlRpcLocust</strong>, which provides an XML-RPC client,
-<strong>XmlRpcClient</strong>, and tracks all requests made:</p>
-<p>If you&#8217;ve written Locust tests before, you&#8217;ll recognize the class called <em>ApiUser</em> which is a normal
-Locust class that has a <em>TaskSet</em> class with <em>tasks</em> in its <em>task_set</em> attribute. However, the <em>ApiUser</em>
-inherits from <em>XmlRpcLocust</em> that you can see right above ApiUser. The <em>XmlRpcLocust</em> class provides an
-instance of XmlRpcClient under the <em>client</em> attribute. The <em>XmlRpcClient</em> is a wrapper around the standard
-library&#8217;s <code class="xref py py-class docutils literal"><span class="pre">xmlrpclib.ServerProxy</span></code>. It  basically just proxies the function calls, but with the
-important addition of firing <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_success</span></code> and <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_failure</span></code>
-events, which will make all calls reported in Locust&#8217;s statistics.</p>
-<p>Here&#8217;s an implementation of an XML-RPC server that would work as a server for the code above:</p>
+  <div class="section" id="id1">
+<h1>使用自定义客户端测试其他系统<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>Locust将HTTP作为其主要目标建立的。但是，它可以很懂一的拓展到负载测试任何基于 请求/响应 模式的系统，通过
+编写一个自定义的客户端触发 <code class="xref py py-attr docutils literal"><span class="pre">request_success</span></code> 和
+<code class="xref py py-attr docutils literal"><span class="pre">request_success</span></code> 事件。</p>
+<div class="section" id="xml-rpc-locust">
+<h2>简单的 XML-RPC Locust 客户端<a class="headerlink" href="#xml-rpc-locust" title="Permalink to this headline">¶</a></h2>
+<p>这里是一个Locust类的例子， <strong>XmlRpcLocust</strong> ，提供了一个 XML-RPC 客户端，<strong>XmlRpcClient</strong>，
+并跟踪所有请求的产生:</p>
+<p>如果你之前写过Locust测试，你会认出叫 <em>ApiUser</em> 的类，它是一个标准的Locust类，包含一个有 <em>tasks</em> 在它的
+<em>task_set</em> 属性中的 <em>TaskSet</em> 类。然而， <em>ApiUser</em> 继承自 <em>XmlRpcLocust</em>，你可以在ApiUser的右上方。
+<em>XmlRpcLocust</em> 类在 <em>client</em> 属性下提供了一个 XmlRpcClient 实例。它基本上只是代理了函数调用，但是作为
+触发 <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_success</span></code> 和 <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_failure</span></code> 事件重要的补充，
+我们会将所有的调用在Locust的统计结果中报告。</p>
+<p>这里一个XML-RPC服务器作为一个服务端工作的一个实现，参见下面的代码:</p>
 </div>
 </div>
 
@@ -72,8 +69,8 @@ events, which will make all calls reported in Locust&#8217;s statistics.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Testing other systems using custom clients</a><ul>
-<li><a class="reference internal" href="#sample-xml-rpc-locust-client">Sample XML-RPC Locust client</a></li>
+<li><a class="reference internal" href="#">使用自定义客户端测试其他系统</a><ul>
+<li><a class="reference internal" href="#xml-rpc-locust">简单的 XML-RPC Locust 客户端</a></li>
 </ul>
 </li>
 </ul>
@@ -81,7 +78,7 @@ events, which will make all calls reported in Locust&#8217;s statistics.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="running-locust-distributed.html" title="previous chapter">Running Locust distributed</a></li>
+      <li>Previous: <a href="running-locust-distributed.html" title="previous chapter">分布式运行 Locust</a></li>
       <li>Next: <a href="api.html" title="next chapter">API</a></li>
   </ul></li>
 </ul>
