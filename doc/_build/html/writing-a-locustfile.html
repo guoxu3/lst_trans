@@ -149,11 +149,9 @@ let&#8217;s call it the locust class—that inherits from the class Locust.</p>
 <div class="section" id="id1">
 <h3>tasks 属性<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>使用&#64;task装饰来定义tasks是一个方便的，通常也是最好的方式。然而，也可以通过设置 <code class="xref py py-attr docutils literal"><span class="pre">tasks</span></code>
-属性来定义一个TaskSet的tasks(使用&#64;task装饰器会只填充*tasks*属性)。</p>
-<p><em>tasks*属性既是一个python可调用的列表，也是一个*&lt;callable : int&gt;*字典。tasks是可调用的python，它接收一个参数-
-The *tasks</em> attribute is either a list of python callables, or a <em>&lt;callable : int&gt;</em> dict.
-The tasks are python callables that receive one argument—the TaskSet class instance that is executing
-the task. Here is an extremely simple example of a locustfile (this locustfile won&#8217;t actually load test anything):</p>
+属性来定义一个TaskSet的tasks(使用&#64;task装饰器会只填充 <em>tasks</em> 属性)。</p>
+<p><em>tasks</em> 属性既是一个python可调用的列表，也是一个 <em>&lt;callable : int&gt;</em> 字典。tasks是可调用的python，它接收一个参数-TaskSet类的
+实例用来执行任务。这里是一个非常简单的locustfile例子(这个locustfile并不实际负载测试任何东西):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">TaskSet</span>
 
 <span class="k">def</span> <span class="nf">my_task</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
@@ -166,59 +164,53 @@ the task. Here is an extremely simple example of a locustfile (this locustfile w
     <span class="n">task_set</span> <span class="o">=</span> <span class="n">MyTaskSet</span>
 </pre></div>
 </div>
-<p>If the
-tasks attribute is specified as a list, each time a task is to be performed, it will be randomly
-chosen from the <em>tasks</em> attribute. If however, <em>tasks</em> is a dict—with callables as keys and ints
-as values—the task that is to be executed will be chosen at random but with the int as ratio. So
-with a tasks that looks like this:</p>
+<p>如果任务属性被定义为一个列表，每次都会在 <em>tasks</em> 属性中随机挑选一个任务来执行。然而，如果 <em>tasks</em> 是一个字典-
+以key来调用，int型作为值-将会一个整数作为比例来被选择执行。所以一个task看起来就像这样:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">my_task</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">another_task</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
 </pre></div>
 </div>
-<p><em>my_task</em> would be 3 times more likely to be executed than <em>another_task</em>.</p>
+<p><em>my_task</em> 将会被执行3倍于 <em>another_task</em> 执行的次数.</p>
 </div>
-<div class="section" id="tasksets-can-be-nested">
-<h3>TaskSets can be nested<a class="headerlink" href="#tasksets-can-be-nested" title="Permalink to this headline">¶</a></h3>
-<p>A very important property of TaskSets is that they can be nested, because real websites are usually
-built up in an hierarchical way, with multiple sub-sections. Nesting TaskSets will therefore allow
-us to define a behaviour that simulates users in a more realistic way. For example
-we could define TaskSets with the following structure:</p>
+<div class="section" id="tasksets">
+<h3>TaskSets 可以嵌套<a class="headerlink" href="#tasksets" title="Permalink to this headline">¶</a></h3>
+<p>TaskSets一个非常重要的特性是可以被嵌套，因为实际的网站通常是以分层的方式构建的，有很多子功能。因此嵌套的TaskSet
+允许我们以一个更逼真的方式来定义模拟用户的行为。例如，我们可以要按一下结构来定义TaskSet:</p>
 <ul class="simple">
-<li>Main user behaviour</li>
+<li>主用户行为</li>
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li>Index page</li>
-<li>Forum page</li>
+<li>索引页</li>
+<li>论坛页</li>
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li>Read thread</li>
+<li>读线程</li>
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li>Reply</li>
+<li>回复</li>
 </ul>
 </div></blockquote>
 <ul class="simple">
-<li>New thread</li>
-<li>View next page</li>
+<li>新线程</li>
+<li>查看下一页</li>
 </ul>
 </div></blockquote>
 <ul class="simple">
-<li>Browse categories</li>
+<li>浏览分类</li>
 </ul>
 <blockquote>
 <div><ul class="simple">
-<li>Watch movie</li>
-<li>Filter movies</li>
+<li>看电影</li>
+<li>筛选电影</li>
 </ul>
 </div></blockquote>
 <ul class="simple">
-<li>About page</li>
+<li>关于页</li>
 </ul>
 </div></blockquote>
-<p>The way you nest TaskSets is just like when you specify a task using the <strong>tasks</strong> attribute, but
-instead of referring to a python function, you point it to another TaskSet:</p>
+<p>嵌套TaskSet的方式就像你使用 <strong>tasks</strong> 属性指定一个任务一样，但是你指向另一个TaskSet来取代指向一个python函数:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ForumPage</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
     <span class="nd">@task</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">read_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -240,18 +232,14 @@ instead of referring to a python function, you point it to another TaskSet:</p>
         <span class="k">pass</span>
 </pre></div>
 </div>
-<p>So in above example, if the ForumPage would get selected for execution when the UserBehaviour
-TaskSet is executing, then the ForumPage TaskSet would start executing. The ForumPage TaskSet
-would then pick one of its own tasks, execute it, then wait, and so on.</p>
-<p>There is one important thing to note about the above example, and that is the call to
-self.interrupt() in the ForumPage&#8217;s stop method. What this does is essentially that it will
-stop executing the ForumPage task set and the execution will continue in the UserBehaviour instance.
-If we wouldn&#8217;t have had a call to the <code class="xref py py-meth docutils literal"><span class="pre">interrupt()</span></code> method
-somewhere in ForumPage, the Locust would never stop running the ForumPage task once it has started.
-But by having the interrupt function, we can—together with task weighting—define how likely it
-is that a simulated user leaves the forum.</p>
-<p>It&#8217;s also possible to declare a nested TaskSet, inline in a class, using the
-<code class="xref py py-meth docutils literal"><span class="pre">&#64;task</span></code> decorator, just like when declaring normal tasks:</p>
+<p>所以在上面的例子中，如果ForumPage在 UserBehaviour TaskSet执行时被选来执行，ForumPage的TaskSet就会开始执行。
+论坛页的TaskSet就会选择它自己的任务中的一个，执行它，然后等待，如此往复。</p>
+<p>在上面的例子中有一个重要的事情需要指出的是，就是在ForumPage的stop方法中调用的self.interrupt()。它本质上是
+停止执行ForumPage的任务集合，然后UserBehaviour实例中的操作会继续执行。如果我们没有在ForumPage的某个地方
+调用 <code class="xref py py-meth docutils literal"><span class="pre">interrupt()</span></code> 方法，那么Locust将永远不会停止运行ForumPage
+任务一旦它开始执行了。但是有了interrupt函数，我们就能-和任务权重一起-定义模拟用户离开论然的可能性。</p>
+<p>在一个类的内部定义一个嵌套的TaskSet也是可以的，使用 <code class="xref py py-meth docutils literal"><span class="pre">&#64;task</span></code> 装饰器，
+就像定义一个普通任务时那样:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
     <span class="nd">@task</span>
     <span class="k">class</span> <span class="nc">SubTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
@@ -261,28 +249,25 @@ is that a simulated user leaves the forum.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="the-on-start-function">
-<h3>The on_start function<a class="headerlink" href="#the-on-start-function" title="Permalink to this headline">¶</a></h3>
-<p>A TaskSet class can optionally declare an <code class="xref py py-meth docutils literal"><span class="pre">on_start</span></code> function.
-If so, that function is called when a simulated user starts executing that TaskSet class.</p>
+<div class="section" id="on-start">
+<h3>on_start 函数<a class="headerlink" href="#on-start" title="Permalink to this headline">¶</a></h3>
+<p>一个TaskSet类可以随意的定义一个 <code class="xref py py-meth docutils literal"><span class="pre">on_start</span></code> 函数。如果这样做了的话，这个函数
+就会在一个模拟用户开始执行TaskSet类的时候被调用。</p>
 </div>
-<div class="section" id="referencing-the-locust-instance-or-the-parent-taskset-instance">
-<h3>Referencing the Locust instance, or the parent TaskSet instance<a class="headerlink" href="#referencing-the-locust-instance-or-the-parent-taskset-instance" title="Permalink to this headline">¶</a></h3>
-<p>A TaskSet instance will have the attribute <code class="xref py py-attr docutils literal"><span class="pre">locust</span></code> point to
-its Locust instance, and the attribute <code class="xref py py-attr docutils literal"><span class="pre">parent</span></code> point to its
-parent TaskSet (it will point to the Locust instance, in the base TaskSet).</p>
+<div class="section" id="locust-taskset">
+<h3>引用 Locust 实例或者父 TaskSet 实例<a class="headerlink" href="#locust-taskset" title="Permalink to this headline">¶</a></h3>
+<p>一个TaskSet实例会有一个 <code class="xref py py-attr docutils literal"><span class="pre">locust</span></code> 属性指向它的 Locust 实例，
+<code class="xref py py-attr docutils literal"><span class="pre">parent</span></code> 属性指向它的父TaskSet(它会指向Locust实例，在基础的TaskSet中)。</p>
 </div>
 </div>
-<div class="section" id="making-http-requests">
-<h2>Making HTTP requests<a class="headerlink" href="#making-http-requests" title="Permalink to this headline">¶</a></h2>
-<p>So far, we&#8217;ve only covered the task scheduling part of a Locust user. In order to actually load test
-a system we need to make HTTP requests. To help us do this, the <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code>
-class exists. When using this class, each instance gets a
-<code class="xref py py-attr docutils literal"><span class="pre">client</span></code> attribute which will be an instance of
-<code class="xref py py-attr docutils literal"><span class="pre">HttpSession</span></code> which can be used to make HTTP requests.</p>
-<p>When inheriting from the HttpLocust class, we can use its client attribute to make HTTP requests
-against the server. Here is an example of a locust file that can be used to load test a site
-with two URLs; <strong>/</strong> and <strong>/about/</strong>:</p>
+<div class="section" id="http">
+<h2>发起 HTTP 请求<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h2>
+<p>到目前为止，我们只讨论了一个Locust用户的任务调用部分。为了实际去负载测试一个系统我们需要发起HTTP请求。为了帮助我们做这些
+<code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> 类诞生了。当使用这个类时，每个实例拥有一个
+<code class="xref py py-attr docutils literal"><span class="pre">client</span></code> 属性，它是 <code class="xref py py-attr docutils literal"><span class="pre">HttpSession</span></code>
+的一个实例，可以用来发起HTTP请求的。</p>
+<p>当继承了HttpLocust类之后，我们可以使用它的client属性来对服务器发起HTTP请求。这里是一个locust 文件的例子，可以用来负载一个有
+两个URL的站点；<strong>/</strong> 和 <strong>/about/</strong>:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">HttpLocust</span><span class="p">,</span> <span class="n">TaskSet</span><span class="p">,</span> <span class="n">task</span>
 
 <span class="k">class</span> <span class="nc">MyTaskSet</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
@@ -300,75 +285,62 @@ with two URLs; <strong>/</strong> and <strong>/about/</strong>:</p>
     <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">15000</span>
 </pre></div>
 </div>
-<p>Using the above Locust class, each simulated user will wait between 5 and 15 seconds
-between the requests, and <strong>/</strong> will be requested twice as much as <strong>/about/</strong>.</p>
-<p>The attentive reader will find it odd that we can reference the HttpSession instance
-using <em>self.client</em> inside the TaskSet, and not <em>self.locust.client</em>. We can do this
-because the <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> class has a convenience property
-called client that simply returns self.locust.client.</p>
+<p>使用上面的Locust类，每个模拟用户在请求间隔会等待5-15秒，并且**/** 会被请求两倍于 <strong>/about/</strong>。</p>
+<p>细心的读者会发现一个奇怪的地方就是我们可以在TaskSet使用 <em>self.client</em> 引用HttpSession实例
+而不是 <em>self.locust.client</em>。我们可以这样做是因为 <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code>
+类有一个方便的属性叫做client，简单的返回 self.locust.client 。</p>
 </div>
-<div class="section" id="using-the-http-client">
-<h2>Using the HTTP client<a class="headerlink" href="#using-the-http-client" title="Permalink to this headline">¶</a></h2>
-<p>Each instance of HttpLocust has an instance of <code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code>
-in the <em>client</em> attribute. The HttpSession class is actually a subclass of
-<code class="xref py py-class docutils literal"><span class="pre">requests.Session</span></code> and can be used to  make HTTP requests, that will be reported to Locust&#8217;s
-statistics, using the <code class="xref py py-meth docutils literal"><span class="pre">get</span></code>,
+<div class="section" id="http-client">
+<h2>使用 HTTP client<a class="headerlink" href="#http-client" title="Permalink to this headline">¶</a></h2>
+<p>每个HttpLocust实例都有一个 <code class="xref py py-class docutils literal"><span class="pre">HttpSession</span></code> 实例在*client*属性中。
+HttpSession 类实际是 <code class="xref py py-class docutils literal"><span class="pre">requests.Session</span></code> 的一个子类，可以被用来发起HTTP请求，并且会反馈给Locust的
+统计结果，通过使用:py:meth:<cite>get &lt;locust.clients.HttpSession.get&gt;</cite>,
 <code class="xref py py-meth docutils literal"><span class="pre">post</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">put</span></code>,
 <code class="xref py py-meth docutils literal"><span class="pre">delete</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">head</span></code>,
-<code class="xref py py-meth docutils literal"><span class="pre">patch</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">options</span></code>
-methods. The HttpSession instance will preserve cookies between requests so that it can be used to log in
-to websites and keep a session between requests. The client attribute can also be reference from the Locust
-instance&#8217;s TaskSet instances so that it&#8217;s easy to retrieve the client and make HTTP requests from within your
-tasks.</p>
-<p>Here&#8217;s a simple example that makes a GET request to the <em>/about</em> path (in this case we assume <em>self</em>
-is an instance of a <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> or <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code>
-class:</p>
+<code class="xref py py-meth docutils literal"><span class="pre">patch</span></code> 和 <code class="xref py py-meth docutils literal"><span class="pre">options</span></code>
+这些方法。HttpSession 实例将会在请求之间保存cookie，所以它可以用来登录网站并且在请求之间保持会话。client 属性也可以引用
+Locust实例的TaskSet实例，所以在你的任务中找到client并发起HTTP请求是很容易的。</p>
+<p>这里是一个简单的例子，发起一个GET请求到 <em>/about</em> 路径(在这里我们假设 <em>self</em> 是 <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code>
+或 <code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> 类的一个实例):</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/about&quot;</span><span class="p">)</span>
 <span class="nb">print</span> <span class="s2">&quot;Response status code:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
 <span class="nb">print</span> <span class="s2">&quot;Response content:&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span>
 </pre></div>
 </div>
-<p>And here&#8217;s an example making a POST request:</p>
+<p>这里是一个发起POST请求的例子:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/login&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span><span class="s2">&quot;testuser&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span><span class="s2">&quot;secret&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
-<div class="section" id="safe-mode">
-<h3>Safe mode<a class="headerlink" href="#safe-mode" title="Permalink to this headline">¶</a></h3>
-<p>The HTTP client is configured to run in safe_mode. What this does is that any request that fails due to
-a connection error, timeout, or similar will not raise an exception, but rather return an empty dummy
-Response object. The request will be reported as a failure in Locust&#8217;s statistics. The returned dummy
-Response&#8217;s <em>content</em> attribute will be set to None, and its <em>status_code</em> will be 0.</p>
+<div class="section" id="id2">
+<h3>安全模式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>HTTP client 被配置成运行在安全模式下。它所做的就在任意请求因为一个连接错误、超时或者类似情况导致的失败都不会抛出异常，
+只返回一个空的虚拟的 Response 对象。这个请求会在Locust统计中被报告为一个失败，返回的虚拟的Response的 <em>content</em>
+属性会被设置为None，并且它的 <em>status_code</em> 会被置为0。</p>
 </div>
-<div class="section" id="manually-controlling-if-a-request-should-be-considered-successful-or-a-failure">
-<h3>Manually controlling if a request should be considered successful or a failure<a class="headerlink" href="#manually-controlling-if-a-request-should-be-considered-successful-or-a-failure" title="Permalink to this headline">¶</a></h3>
-<p>By default, requests are marked as failed requests unless the HTTP response code is OK (2xx).
-Most of the time, this default is what you want. Sometimes however—for example when testing
-a URL endpoint that you expect to return 404, or testing a badly designed system that might
-return <em>200 OK</em> even though an error occurred—there&#8217;s a need for manually controlling if
-locust should consider a request as a success or a failure.</p>
-<p>One can mark requests as failed, even when the response code is OK, by using the
-<em>catch_response</em> argument and a with statement:</p>
+<div class="section" id="id3">
+<h3>手动控制如果一个请求需要被当作是成功或者失败<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>默认情况下，请求都会被标记为失败的请求除非HTTP返回码是OK(2xx)。大多数情况下，默认的就是你需要的。
+但是有些时候-例如测试一个URL端点你希望返回404，或者测试一个设计的很差的系统即便返回 <em>200 OK</em>
+也是有错误的-这时就需要一个手动的控制如果locust可以将一个请求当作成功或者失败。</p>
+<p>通过使用 <em>catch_response</em> 声明和一个描述，用户可以将一个请求标记为失败，即便返回码是OK:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">catch_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">!=</span> <span class="s2">&quot;Success&quot;</span><span class="p">:</span>
         <span class="n">response</span><span class="o">.</span><span class="n">failure</span><span class="p">(</span><span class="s2">&quot;Got wrong response&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Just as one can mark requests with OK response codes as failures, one can also use <strong>catch_response</strong>
-argument together with a <em>with</em> statement to make requests that resulted in an HTTP error code still
-be reported as a success in the statistics:</p>
+<p>就像可以将一个OK返回码的请求标记为失败一样，同样可以使用 <strong>catch_response</strong> 声明 和一个 <em>with</em> 描述一起来
+让一个HTTP错误码结果的请求仍然在统计结果中被报告为成功的:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/does_not_exist/&quot;</span><span class="p">,</span> <span class="n">catch_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
         <span class="n">response</span><span class="o">.</span><span class="n">success</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="grouping-requests-to-urls-with-dynamic-parameters">
-<h3>Grouping requests to URLs with dynamic parameters<a class="headerlink" href="#grouping-requests-to-urls-with-dynamic-parameters" title="Permalink to this headline">¶</a></h3>
-<p>It&#8217;s very common for websites to have pages whose URLs contain some kind of dynamic parameter(s).
-Often it makes sense to group these URLs together in Locust&#8217;s statistics. This can be done
-by passing a <em>name</em> argument to the <code class="xref py py-class docutils literal"><span class="pre">HttpSession's</span></code>
-different request methods.</p>
-<p>Example:</p>
+<div class="section" id="url">
+<h3>使用动态参数对URL进行分组请求<a class="headerlink" href="#url" title="Permalink to this headline">¶</a></h3>
+<p>网站的页面URL包含某些动态的参数的情况是非常常见的。通常在Locust的统计结果中将这些URL归类是有意义的。
+这可以同多传一个 <em>name</em> 属性给 <code class="xref py py-class docutils literal"><span class="pre">HttpSession's</span></code> 不同的请求方法。</p>
+<p>例如:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Statistics for these requests will be grouped under: /blog/?id=[id]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
     <span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/blog?id=</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;/blog?id=[id]&quot;</span><span class="p">)</span>
@@ -397,16 +369,16 @@ different request methods.</p>
 <li><a class="reference internal" href="#taskset">TaskSet 类</a><ul>
 <li><a class="reference internal" href="#tasks">声明 tasks</a></li>
 <li><a class="reference internal" href="#id1">tasks 属性</a></li>
-<li><a class="reference internal" href="#tasksets-can-be-nested">TaskSets can be nested</a></li>
-<li><a class="reference internal" href="#the-on-start-function">The on_start function</a></li>
-<li><a class="reference internal" href="#referencing-the-locust-instance-or-the-parent-taskset-instance">Referencing the Locust instance, or the parent TaskSet instance</a></li>
+<li><a class="reference internal" href="#tasksets">TaskSets 可以嵌套</a></li>
+<li><a class="reference internal" href="#on-start">on_start 函数</a></li>
+<li><a class="reference internal" href="#locust-taskset">引用 Locust 实例或者父 TaskSet 实例</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#making-http-requests">Making HTTP requests</a></li>
-<li><a class="reference internal" href="#using-the-http-client">Using the HTTP client</a><ul>
-<li><a class="reference internal" href="#safe-mode">Safe mode</a></li>
-<li><a class="reference internal" href="#manually-controlling-if-a-request-should-be-considered-successful-or-a-failure">Manually controlling if a request should be considered successful or a failure</a></li>
-<li><a class="reference internal" href="#grouping-requests-to-urls-with-dynamic-parameters">Grouping requests to URLs with dynamic parameters</a></li>
+<li><a class="reference internal" href="#http">发起 HTTP 请求</a></li>
+<li><a class="reference internal" href="#http-client">使用 HTTP client</a><ul>
+<li><a class="reference internal" href="#id2">安全模式</a></li>
+<li><a class="reference internal" href="#id3">手动控制如果一个请求需要被当作是成功或者失败</a></li>
+<li><a class="reference internal" href="#url">使用动态参数对URL进行分组请求</a></li>
 </ul>
 </li>
 </ul>

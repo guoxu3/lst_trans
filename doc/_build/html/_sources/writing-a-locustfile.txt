@@ -120,12 +120,10 @@ tasks 属性
 --------------
 
 使用@task装饰来定义tasks是一个方便的，通常也是最好的方式。然而，也可以通过设置 :py:attr:`tasks <locust.core.TaskSet.tasks>`
-属性来定义一个TaskSet的tasks(使用@task装饰器会只填充*tasks*属性)。
+属性来定义一个TaskSet的tasks(使用@task装饰器会只填充 *tasks* 属性)。
 
-*tasks*属性既是一个python可调用的列表，也是一个*<callable : int>*字典。tasks是可调用的python，它接收一个参数-
-The *tasks* attribute is either a list of python callables, or a *<callable : int>* dict. 
-The tasks are python callables that receive one argument—the TaskSet class instance that is executing 
-the task. Here is an extremely simple example of a locustfile (this locustfile won't actually load test anything)::
+*tasks* 属性既是一个python可调用的列表，也是一个 *<callable : int>* 字典。tasks是可调用的python，它接收一个参数-TaskSet类的
+实例用来执行任务。这里是一个非常简单的locustfile例子(这个locustfile并不实际负载测试任何东西)::
 
     from locust import Locust, TaskSet
     
@@ -139,45 +137,39 @@ the task. Here is an extremely simple example of a locustfile (this locustfile w
         task_set = MyTaskSet
 
 
-If the 
-tasks attribute is specified as a list, each time a task is to be performed, it will be randomly 
-chosen from the *tasks* attribute. If however, *tasks* is a dict—with callables as keys and ints 
-as values—the task that is to be executed will be chosen at random but with the int as ratio. So 
-with a tasks that looks like this::
+如果任务属性被定义为一个列表，每次都会在 *tasks* 属性中随机挑选一个任务来执行。然而，如果 *tasks* 是一个字典-
+以key来调用，int型作为值-将会一个整数作为比例来被选择执行。所以一个task看起来就像这样::
 
     {my_task: 3, another_task:1}
 
-*my_task* would be 3 times more likely to be executed than *another_task*.
+*my_task* 将会被执行3倍于 *another_task* 执行的次数.
 
-TaskSets can be nested
+TaskSets 可以嵌套
 ----------------------
 
-A very important property of TaskSets is that they can be nested, because real websites are usually 
-built up in an hierarchical way, with multiple sub-sections. Nesting TaskSets will therefore allow 
-us to define a behaviour that simulates users in a more realistic way. For example 
-we could define TaskSets with the following structure:
+TaskSets一个非常重要的特性是可以被嵌套，因为实际的网站通常是以分层的方式构建的，有很多子功能。因此嵌套的TaskSet
+允许我们以一个更逼真的方式来定义模拟用户的行为。例如，我们可以要按一下结构来定义TaskSet:
 
-* Main user behaviour
+* 主用户行为
 
- * Index page
- * Forum page
+ * 索引页
+ * 论坛页
  
-  * Read thread
+  * 读线程
   
-   * Reply
+   * 回复
    
-  * New thread
-  * View next page
+  * 新线程
+  * 查看下一页
   
- * Browse categories
+ * 浏览分类
  
-  * Watch movie
-  * Filter movies
+  * 看电影
+  * 筛选电影
   
- * About page
+ * 关于页
 
-The way you nest TaskSets is just like when you specify a task using the **tasks** attribute, but 
-instead of referring to a python function, you point it to another TaskSet::
+嵌套TaskSet的方式就像你使用 **tasks** 属性指定一个任务一样，但是你指向另一个TaskSet来取代指向一个python函数::
 
     class ForumPage(TaskSet):
         @task(20)
@@ -199,20 +191,16 @@ instead of referring to a python function, you point it to another TaskSet::
         def index(self):
             pass
 
-So in above example, if the ForumPage would get selected for execution when the UserBehaviour 
-TaskSet is executing, then the ForumPage TaskSet would start executing. The ForumPage TaskSet 
-would then pick one of its own tasks, execute it, then wait, and so on. 
+所以在上面的例子中，如果ForumPage在 UserBehaviour TaskSet执行时被选来执行，ForumPage的TaskSet就会开始执行。
+论坛页的TaskSet就会选择它自己的任务中的一个，执行它，然后等待，如此往复。
 
-There is one important thing to note about the above example, and that is the call to 
-self.interrupt() in the ForumPage's stop method. What this does is essentially that it will 
-stop executing the ForumPage task set and the execution will continue in the UserBehaviour instance. 
-If we wouldn't have had a call to the :py:meth:`interrupt() <locust.core.TaskSet.interrupt>` method 
-somewhere in ForumPage, the Locust would never stop running the ForumPage task once it has started. 
-But by having the interrupt function, we can—together with task weighting—define how likely it 
-is that a simulated user leaves the forum.
+在上面的例子中有一个重要的事情需要指出的是，就是在ForumPage的stop方法中调用的self.interrupt()。它本质上是
+停止执行ForumPage的任务集合，然后UserBehaviour实例中的操作会继续执行。如果我们没有在ForumPage的某个地方
+调用 :py:meth:`interrupt() <locust.core.TaskSet.interrupt>` 方法，那么Locust将永远不会停止运行ForumPage
+任务一旦它开始执行了。但是有了interrupt函数，我们就能-和任务权重一起-定义模拟用户离开论然的可能性。
 
-It's also possible to declare a nested TaskSet, inline in a class, using the 
-:py:meth:`@task <locust.core.task>` decorator, just like when declaring normal tasks::
+在一个类的内部定义一个嵌套的TaskSet也是可以的，使用 :py:meth:`@task <locust.core.task>` 装饰器，
+就像定义一个普通任务时那样::
 
     class MyTaskSet(TaskSet):
         @task
@@ -222,37 +210,33 @@ It's also possible to declare a nested TaskSet, inline in a class, using the
                 pass
 
 
-The on_start function
+on_start 函数
 ---------------------
 
-A TaskSet class can optionally declare an :py:meth:`on_start <locust.core.TaskSet.on_start>` function. 
-If so, that function is called when a simulated user starts executing that TaskSet class.
+一个TaskSet类可以随意的定义一个 :py:meth:`on_start <locust.core.TaskSet.on_start>` 函数。如果这样做了的话，这个函数
+就会在一个模拟用户开始执行TaskSet类的时候被调用。
 
-
-Referencing the Locust instance, or the parent TaskSet instance
+引用 Locust 实例或者父 TaskSet 实例
 ---------------------------------------------------------------
 
-A TaskSet instance will have the attribute :py:attr:`locust <locust.core.TaskSet.locust>` point to 
-its Locust instance, and the attribute :py:attr:`parent <locust.core.TaskSet.parent>` point to its 
-parent TaskSet (it will point to the Locust instance, in the base TaskSet).
+一个TaskSet实例会有一个 :py:attr:`locust <locust.core.TaskSet.locust>` 属性指向它的 Locust 实例，
+:py:attr:`parent <locust.core.TaskSet.parent>` 属性指向它的父TaskSet(它会指向Locust实例，在基础的TaskSet中)。
 
 
-Making HTTP requests 
+发起 HTTP 请求
 =====================
 
-So far, we've only covered the task scheduling part of a Locust user. In order to actually load test 
-a system we need to make HTTP requests. To help us do this, the :py:class:`HttpLocust <locust.core.HttpLocust>`
-class exists. When using this class, each instance gets a 
-:py:attr:`client <locust.core.Locust.client>` attribute which will be an instance of 
-:py:attr:`HttpSession <locust.core.client.HttpSession>` which can be used to make HTTP requests.
+到目前为止，我们只讨论了一个Locust用户的任务调用部分。为了实际去负载测试一个系统我们需要发起HTTP请求。为了帮助我们做这些
+:py:class:`HttpLocust <locust.core.HttpLocust>` 类诞生了。当使用这个类时，每个实例拥有一个
+:py:attr:`client <locust.core.Locust.client>` 属性，它是 :py:attr:`HttpSession <locust.core.client.HttpSession>`
+的一个实例，可以用来发起HTTP请求的。
 
 .. autoclass:: locust.core.HttpLocust
     :members: client
     :noindex:
 
-When inheriting from the HttpLocust class, we can use its client attribute to make HTTP requests 
-against the server. Here is an example of a locust file that can be used to load test a site 
-with two URLs; **/** and **/about/**::
+当继承了HttpLocust类之后，我们可以使用它的client属性来对服务器发起HTTP请求。这里是一个locust 文件的例子，可以用来负载一个有
+两个URL的站点；**/** 和 **/about/**::
 
     from locust import HttpLocust, TaskSet, task
     
@@ -270,84 +254,71 @@ with two URLs; **/** and **/about/**::
         min_wait = 5000
         max_wait = 15000
 
-Using the above Locust class, each simulated user will wait between 5 and 15 seconds 
-between the requests, and **/** will be requested twice as much as **/about/**.
+使用上面的Locust类，每个模拟用户在请求间隔会等待5-15秒，并且**/** 会被请求两倍于 **/about/**。
 
-The attentive reader will find it odd that we can reference the HttpSession instance 
-using *self.client* inside the TaskSet, and not *self.locust.client*. We can do this 
-because the :py:class:`TaskSet <locust.core.TaskSet>` class has a convenience property 
-called client that simply returns self.locust.client.
+细心的读者会发现一个奇怪的地方就是我们可以在TaskSet使用 *self.client* 引用HttpSession实例
+而不是 *self.locust.client*。我们可以这样做是因为 :py:class:`TaskSet <locust.core.TaskSet>`
+类有一个方便的属性叫做client，简单的返回 self.locust.client 。
 
 
-Using the HTTP client
+使用 HTTP client
 ======================
 
-Each instance of HttpLocust has an instance of :py:class:`HttpSession <locust.clients.HttpSession>` 
-in the *client* attribute. The HttpSession class is actually a subclass of 
-:py:class:`requests.Session` and can be used to  make HTTP requests, that will be reported to Locust's
-statistics, using the :py:meth:`get <locust.clients.HttpSession.get>`, 
-:py:meth:`post <locust.clients.HttpSession.post>`, :py:meth:`put <locust.clients.HttpSession.put>`, 
-:py:meth:`delete <locust.clients.HttpSession.delete>`, :py:meth:`head <locust.clients.HttpSession.head>`, 
-:py:meth:`patch <locust.clients.HttpSession.patch>` and :py:meth:`options <locust.clients.HttpSession.options>` 
-methods. The HttpSession instance will preserve cookies between requests so that it can be used to log in 
-to websites and keep a session between requests. The client attribute can also be reference from the Locust 
-instance's TaskSet instances so that it's easy to retrieve the client and make HTTP requests from within your 
-tasks.
+每个HttpLocust实例都有一个 :py:class:`HttpSession <locust.clients.HttpSession>` 实例在*client*属性中。
+HttpSession 类实际是 :py:class:`requests.Session` 的一个子类，可以被用来发起HTTP请求，并且会反馈给Locust的
+统计结果，通过使用:py:meth:`get <locust.clients.HttpSession.get>`,
+:py:meth:`post <locust.clients.HttpSession.post>`, :py:meth:`put <locust.clients.HttpSession.put>`,
+:py:meth:`delete <locust.clients.HttpSession.delete>`, :py:meth:`head <locust.clients.HttpSession.head>`,
+:py:meth:`patch <locust.clients.HttpSession.patch>` 和 :py:meth:`options <locust.clients.HttpSession.options>`
+这些方法。HttpSession 实例将会在请求之间保存cookie，所以它可以用来登录网站并且在请求之间保持会话。client 属性也可以引用
+Locust实例的TaskSet实例，所以在你的任务中找到client并发起HTTP请求是很容易的。
 
-Here's a simple example that makes a GET request to the */about* path (in this case we assume *self* 
-is an instance of a :py:class:`TaskSet <locust.core.TaskSet>` or :py:class:`HttpLocust <locust.core.Locust>` 
-class::
+这里是一个简单的例子，发起一个GET请求到 */about* 路径(在这里我们假设 *self* 是 :py:class:`TaskSet <locust.core.TaskSet>`
+或 :py:class:`HttpLocust <locust.core.Locust>` 类的一个实例)::
 
     response = self.client.get("/about")
     print "Response status code:", response.status_code
     print "Response content:", response.content
 
-And here's an example making a POST request::
+这里是一个发起POST请求的例子::
 
     response = self.client.post("/login", {"username":"testuser", "password":"secret"})
 
-Safe mode
+安全模式
 ---------
-The HTTP client is configured to run in safe_mode. What this does is that any request that fails due to 
-a connection error, timeout, or similar will not raise an exception, but rather return an empty dummy 
-Response object. The request will be reported as a failure in Locust's statistics. The returned dummy 
-Response's *content* attribute will be set to None, and its *status_code* will be 0.
 
+HTTP client 被配置成运行在安全模式下。它所做的就在任意请求因为一个连接错误、超时或者类似情况导致的失败都不会抛出异常，
+只返回一个空的虚拟的 Response 对象。这个请求会在Locust统计中被报告为一个失败，返回的虚拟的Response的 *content*
+属性会被设置为None，并且它的 *status_code* 会被置为0。
 
-Manually controlling if a request should be considered successful or a failure
+手动控制如果一个请求需要被当作是成功或者失败
 ------------------------------------------------------------------------------
 
-By default, requests are marked as failed requests unless the HTTP response code is OK (2xx). 
-Most of the time, this default is what you want. Sometimes however—for example when testing 
-a URL endpoint that you expect to return 404, or testing a badly designed system that might 
-return *200 OK* even though an error occurred—there's a need for manually controlling if 
-locust should consider a request as a success or a failure.
+默认情况下，请求都会被标记为失败的请求除非HTTP返回码是OK(2xx)。大多数情况下，默认的就是你需要的。
+但是有些时候-例如测试一个URL端点你希望返回404，或者测试一个设计的很差的系统即便返回 *200 OK*
+也是有错误的-这时就需要一个手动的控制如果locust可以将一个请求当作成功或者失败。
 
-One can mark requests as failed, even when the response code is OK, by using the 
-*catch_response* argument and a with statement::
+通过使用 *catch_response* 声明和一个描述，用户可以将一个请求标记为失败，即便返回码是OK::
 
     with client.get("/", catch_response=True) as response:
         if response.content != "Success":
             response.failure("Got wrong response")
 
-Just as one can mark requests with OK response codes as failures, one can also use **catch_response** 
-argument together with a *with* statement to make requests that resulted in an HTTP error code still 
-be reported as a success in the statistics::
+就像可以将一个OK返回码的请求标记为失败一样，同样可以使用 **catch_response** 声明 和一个 *with* 描述一起来
+让一个HTTP错误码结果的请求仍然在统计结果中被报告为成功的::
 
     with client.get("/does_not_exist/", catch_response=True) as response:
         if response.status_code == 404:
             response.success()
 
 
-Grouping requests to URLs with dynamic parameters
+使用动态参数对URL进行分组请求
 -------------------------------------------------
 
-It's very common for websites to have pages whose URLs contain some kind of dynamic parameter(s). 
-Often it makes sense to group these URLs together in Locust's statistics. This can be done 
-by passing a *name* argument to the :py:class:`HttpSession's <locust.clients.HttpSession>` 
-different request methods. 
+网站的页面URL包含某些动态的参数的情况是非常常见的。通常在Locust的统计结果中将这些URL归类是有意义的。
+这可以同多传一个 *name* 属性给 :py:class:`HttpSession's <locust.clients.HttpSession>` 不同的请求方法。
 
-Example::
+例如::
 
     # Statistics for these requests will be grouped under: /blog/?id=[id]
     for i in range(10):
