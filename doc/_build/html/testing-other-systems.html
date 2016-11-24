@@ -52,12 +52,88 @@
 <h2>简单的 XML-RPC Locust 客户端<a class="headerlink" href="#xml-rpc-locust" title="Permalink to this headline">¶</a></h2>
 <p>这里是一个Locust类的例子， <strong>XmlRpcLocust</strong> ，提供了一个 XML-RPC 客户端，<strong>XmlRpcClient</strong>，
 并跟踪所有请求的产生:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">xmlrpclib</span>
+
+<span class="kn">from</span> <span class="nn">locust</span> <span class="k">import</span> <span class="n">Locust</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">TaskSet</span>
+
+
+<span class="k">class</span> <span class="nc">XmlRpcClient</span><span class="p">(</span><span class="n">xmlrpclib</span><span class="o">.</span><span class="n">ServerProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple, sample XML RPC client implementation that wraps xmlrpclib.ServerProxy and</span>
+<span class="sd">    fires locust events on request_success and request_failure, so that all requests</span>
+<span class="sd">    gets tracked in locust&#39;s statistics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">ServerProxy</span><span class="o">.</span><span class="n">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">xmlrpclib</span><span class="o">.</span><span class="n">Fault</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">total_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">request_failure</span><span class="o">.</span><span class="n">fire</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="s2">&quot;xmlrpc&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">response_time</span><span class="o">=</span><span class="n">total_time</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">total_time</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">request_success</span><span class="o">.</span><span class="n">fire</span><span class="p">(</span><span class="n">request_type</span><span class="o">=</span><span class="s2">&quot;xmlrpc&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">response_time</span><span class="o">=</span><span class="n">total_time</span><span class="p">,</span> <span class="n">response_length</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="c1"># In this example, I&#39;ve hardcoded response_length=0. If we would want the response length to be</span>
+                <span class="c1"># reported correctly in the statistics, we would probably need to hook in at a lower level</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="k">class</span> <span class="nc">XmlRpcLocust</span><span class="p">(</span><span class="n">Locust</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is the abstract Locust class which should be subclassed. It provides an XML-RPC client</span>
+<span class="sd">    that can be used to make XML-RPC requests that will be tracked in Locust&#39;s statistics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">XmlRpcLocust</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">XmlRpcClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ApiUser</span><span class="p">(</span><span class="n">XmlRpcLocust</span><span class="p">):</span>
+
+    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;http://127.0.0.1:8877/&quot;</span>
+    <span class="n">min_wait</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">max_wait</span> <span class="o">=</span> <span class="mi">1000</span>
+
+    <span class="k">class</span> <span class="nc">task_set</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+        <span class="nd">@task</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="nd">@task</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">get_random_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_random_number</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>如果你之前写过Locust测试，你会认出叫 <em>ApiUser</em> 的类，它是一个标准的Locust类，包含一个有 <em>tasks</em> 在它的
 <em>task_set</em> 属性中的 <em>TaskSet</em> 类。然而， <em>ApiUser</em> 继承自 <em>XmlRpcLocust</em>，你可以在ApiUser的右上方。
 <em>XmlRpcLocust</em> 类在 <em>client</em> 属性下提供了一个 XmlRpcClient 实例。它基本上只是代理了函数调用，但是作为
 触发 <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_success</span></code> 和 <code class="xref py py-attr docutils literal"><span class="pre">locust.events.request_failure</span></code> 事件重要的补充，
 我们会将所有的调用在Locust的统计结果中报告。</p>
 <p>这里一个XML-RPC服务器作为一个服务端工作的一个实现，参见下面的代码:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">SimpleXMLRPCServer</span> <span class="k">import</span> <span class="n">SimpleXMLRPCServer</span>
+<span class="kn">import</span> <span class="nn">xmlrpclib</span>
+
+<span class="k">def</span> <span class="nf">get_time</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_random_number</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">SimpleXMLRPCServer</span><span class="p">((</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="mi">8877</span><span class="p">))</span>
+<span class="nb">print</span> <span class="s2">&quot;Listening on port 8877...&quot;</span>
+<span class="n">server</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">get_time</span><span class="p">,</span> <span class="s2">&quot;get_time&quot;</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">get_random_number</span><span class="p">,</span> <span class="s2">&quot;get_random_number&quot;</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 

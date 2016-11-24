@@ -3,24 +3,74 @@ API
 ###
 
 
-Locust class
+Locust 类
 ============
 
-.. autoclass:: locust.core.Locust
-	:members: min_wait, max_wait, task_set, weight
+class Locust::
 
-HttpLocust class
+    表示一个被孵化出的"用户"并攻击(attack)需要进行负载测试的系统。
+
+    这个用户的行为是由task_set属性定义的，它需要指向一个 :py:class:`TaskSet <locust.core.TaskSet>` 类
+
+    这个类通常会被一个定义某种客户端的类子类华。例如，当测试一个HTTP系统是，你通常想要使用
+    :py:class:`HttpLocust <locust.core.HttpLocust>` 类。
+
+    max_wait = 1000:
+        执行locust任务之间的最大等待时间
+
+    min_wait = 1000:
+        执行locust任务之间的最小等待时间
+
+    task_set = None:
+        TaskSet类定义locust的执行行为
+        """TaskSet class that defines the execution behaviour of this locust"""
+
+    weight = 10:
+        locust被选中的概率。权重越高，被选中的概率越大。
+
+HttpLocust 类
 ================
 
-.. autoclass:: locust.core.HttpLocust
-	:members: min_wait, max_wait, task_set, client
+class HttpLocust::
+
+    表示一个被孵化出的 HTTP "用户"并攻击(attack)需要进行负载测试的系统。
+
+    这个用户的行为是由task_set属性定义的，它需要指向一个 :py:class:`TaskSet <locust.core.TaskSet>` 类
+
+    这个类创建一个实例化的 *client*，它是一个在请求之间保持用户会话的HTTP客户端。
+
+    client = None:
+        HttpSession的实例，创建在一个实例化的Locust上。客户端支持cookie，因此可以在HTTP请求之间保持会话。
 
 
-TaskSet class
+TaskSet 类
 =============
 
-.. autoclass:: locust.core.TaskSet
-	:members: locust, parent, min_wait, max_wait, client, tasks, interrupt, schedule_task
+class TaskSet
+
+    类定义了Locust用户会执行的操作的任务集合。
+
+    当一个TaskSet开始运行，它将会从 *tasks* 属性中选择一个任务，执行它，调用它的等待函数来从
+    *min_wait* 和 *max_wait* 毫秒数之间选择一个随机数休眠。然后它会安排另一个任务执行，如此往复。
+
+    TaskSet 可以被嵌套，这就意味着一个TaskSet的 *tasks* 属性可以包含另一个 TaskSet。如果一个嵌套的
+    TaskSet是预定要执行的，它将会被实例化然后从当前执行的TaskSet中调用。正在当前运行的TaskSet中执行的将
+    会被移交给嵌套的Taskset来继续运行，直到它抛出一个InterruptTaskSet异常，当
+    :py:meth:`TaskSet.interrupt() <locust.core.TaskSet.interrupt>` 被调用时(操作会在第一个TaskSet中继续)
+
+    client
+        Reference to the :py:attr:`client <locust.core.Locust.client>` attribute of the root
+        Locust instance.
+
+    interrupt(self, reschedule=True)
+        Interrupt the TaskSet and hand over execution control back to the parent TaskSet.
+
+        If *reschedule* is True (default), the parent Locust will immediately re-schedule,
+        and execute, a new task
+
+        This method should not be called by the root TaskSet (the one that is immediately,
+        attached to the Locust class' *task_set* attribute), but rather in nested TaskSet
+        classes further down the hierarchy.
 
 task decorator
 ==============
