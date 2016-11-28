@@ -47,42 +47,37 @@
 <h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="locust">
 <h2>Locust 类<a class="headerlink" href="#locust" title="Permalink to this headline">¶</a></h2>
-<p>class Locust:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>表示一个被孵化出的&quot;用户&quot;并攻击(attack)需要进行负载测试的系统。
-
-这个用户的行为是由task_set属性定义的，它需要指向一个 :py:class:`TaskSet &lt;locust.core.TaskSet&gt;` 类
-
-这个类通常会被一个定义某种客户端的类子类华。例如，当测试一个HTTP系统是，你通常想要使用
-:py:class:`HttpLocust &lt;locust.core.HttpLocust&gt;` 类。
-
-max_wait = 1000:
-    执行locust任务之间的最大等待时间
-
-min_wait = 1000:
-    执行locust任务之间的最小等待时间
-
-task_set = None:
-    TaskSet类定义locust的执行行为
-    &quot;&quot;&quot;TaskSet class that defines the execution behaviour of this locust&quot;&quot;&quot;
-
-weight = 10:
-    locust被选中的概率。权重越高，被选中的概率越大。
-</pre></div>
-</div>
+<p>class Locust</p>
+<blockquote>
+<div><p>表示一个被孵化出的&#8221;用户&#8221;并攻击(attack)需要进行负载测试的系统。</p>
+<p>这个用户的行为是由task_set属性定义的，它需要指向一个 <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> 类</p>
+<p>这个类通常会被一个定义某种客户端的类子类华。例如，当测试一个HTTP系统是，你通常想要使用
+<code class="xref py py-class docutils literal"><span class="pre">HttpLocust</span></code> 类。</p>
+<dl class="docutils">
+<dt>max_wait = 1000</dt>
+<dd>执行locust任务之间的最大等待时间</dd>
+<dt>min_wait = 1000</dt>
+<dd>执行locust任务之间的最小等待时间</dd>
+<dt>task_set = None</dt>
+<dd>TaskSet类定义locust的执行行为
+&#8220;&#8221;&#8220;TaskSet class that defines the execution behaviour of this locust&#8221;&#8220;&#8221;</dd>
+<dt>weight = 10</dt>
+<dd>locust被选中的概率。权重越高，被选中的概率越大。</dd>
+</dl>
+</div></blockquote>
 </div>
 <div class="section" id="httplocust">
 <h2>HttpLocust 类<a class="headerlink" href="#httplocust" title="Permalink to this headline">¶</a></h2>
-<p>class HttpLocust:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>表示一个被孵化出的 HTTP &quot;用户&quot;并攻击(attack)需要进行负载测试的系统。
-
-这个用户的行为是由task_set属性定义的，它需要指向一个 :py:class:`TaskSet &lt;locust.core.TaskSet&gt;` 类
-
-这个类创建一个实例化的 *client*，它是一个在请求之间保持用户会话的HTTP客户端。
-
-client = None:
-    HttpSession的实例，创建在一个实例化的Locust上。客户端支持cookie，因此可以在HTTP请求之间保持会话。
-</pre></div>
-</div>
+<p>class HttpLocust</p>
+<blockquote>
+<div><p>表示一个被孵化出的 HTTP &#8220;用户&#8221;并攻击(attack)需要进行负载测试的系统。</p>
+<p>这个用户的行为是由task_set属性定义的，它需要指向一个 <code class="xref py py-class docutils literal"><span class="pre">TaskSet</span></code> 类</p>
+<p>这个类创建一个实例化的 <em>client</em>，它是一个在请求之间保持用户会话的HTTP客户端。</p>
+<dl class="docutils">
+<dt>client = None:</dt>
+<dd>HttpSession的实例，创建在一个实例化的Locust上。客户端支持cookie，因此可以在HTTP请求之间保持会话。</dd>
+</dl>
+</div></blockquote>
 </div>
 <div class="section" id="taskset">
 <h2>TaskSet 类<a class="headerlink" href="#taskset" title="Permalink to this headline">¶</a></h2>
@@ -97,32 +92,313 @@ TaskSet是预定要执行的，它将会被实例化然后从当前执行的Task
 <code class="xref py py-meth docutils literal"><span class="pre">TaskSet.interrupt()</span></code> 被调用时(操作会在第一个TaskSet中继续)</p>
 <dl class="docutils">
 <dt>client</dt>
-<dd>Reference to the <code class="xref py py-attr docutils literal"><span class="pre">client</span></code> attribute of the root
-Locust instance.</dd>
+<dd>参考根Locust实例的 <code class="xref py py-attr docutils literal"><span class="pre">client</span></code> 属性</dd>
 <dt>interrupt(self, reschedule=True)</dt>
-<dd><p class="first">Interrupt the TaskSet and hand over execution control back to the parent TaskSet.</p>
-<p>If <em>reschedule</em> is True (default), the parent Locust will immediately re-schedule,
-and execute, a new task</p>
-<p class="last">This method should not be called by the root TaskSet (the one that is immediately,
-attached to the Locust class&#8217; <em>task_set</em> attribute), but rather in nested TaskSet
-classes further down the hierarchy.</p>
+<dd><p class="first">中断TaskSet并移交执行控制给父TaskSet。</p>
+<p>如果 <em>reschedule</em> 为True(默认值)，父Locust将立刻重新安排，并执行一个新的任务。</p>
+<p class="last">这个方法不可以被根TaskSet(直接的，隶属于Locust类的*task_set* 属性的那个)调用，而嵌套的
+TaskSet则进一步进到下一层。</p>
+</dd>
+<dt>locust = None</dt>
+<dd>当TaskSet已经实例化时会指向根Locust类。</dd>
+<dt>max_wait = None</dt>
+<dd>执行locust任务间隔的最大等待时间。可以用来覆盖根Locust类中定义的 max_wait，如果TaskSet中
+没有设置的话就会使用。</dd>
+<dt>min_wait = None</dt>
+<dd>执行locust任务间隔的最小等待时间。可以用来覆盖根Locust类中定义的 min_wait，如果TaskSet中
+没有设置的话就会使用。</dd>
+<dt>parent = None</dt>
+<dd>将会指向父TaskSet，或者Locust，类的实例当TaskSet已经被实例化时。对嵌套TaskSet类是很有用的。</dd>
+<dt>schedule_task(self, task_callable, args=None, kwargs=None, first=False):</dt>
+<dd><p class="first">增加一个任务到Locust的任务执行队列中。</p>
+<p class="last"><em>参数</em>:
+* task_callable: 将要安排的Locust任务
+* args: 要传到任务调用的参数
+* kwargs: 关键字参数字典，将被传给任务调用
+* first: 可选的关键字参数。如果为True，任务会被放在队列的第一个。</p>
+</dd>
+<dt>tasks = []</dt>
+<dd><p class="first">python调用的列表，代表一个locust用户任务。</p>
+<p>如果任务是一个列表，执行的任务会随机挑选。</p>
+<p>如果任务是一个二元元组 <em>(callable,int)</em> 列表，或者一个 {callable:int} 字典，任务也会被随机
+选择来执行，但是每个任务将会以它相应的整数值来设置权重。因此在下面的情况下  <em>ThreadPage</em> 将会
+被选择15倍于 <em>write_post</em> 的次数:</p>
+<dl class="last docutils">
+<dt>class ForumPage(TaskSet):</dt>
+<dd>tasks = {ThreadPage:15, write_post:1}</dd>
+</dl>
 </dd>
 </dl>
 </div></blockquote>
 </div>
-<div class="section" id="task-decorator">
-<h2>task decorator<a class="headerlink" href="#task-decorator" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="task">
+<h2>task 装饰器<a class="headerlink" href="#task" title="Permalink to this headline">¶</a></h2>
+<p>在一个类中被作为一个方便的装饰器用来给一个TaskSet定义任务。 例:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ForumPage</span><span class="p">(</span><span class="n">TaskSet</span><span class="p">):</span>
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">read_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@task</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">create_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre></div>
 </div>
-<div class="section" id="httpsession-class">
-<h2>HttpSession class<a class="headerlink" href="#httpsession-class" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="response-class">
-<h2>Response class<a class="headerlink" href="#response-class" title="Permalink to this headline">¶</a></h2>
-<p>This class actually resides in the <a class="reference external" href="http://python-requests.org">python-requests</a> library,
-since that&#8217;s what Locust is using to make HTTP requests, but it&#8217;s included in the API docs
-for locust since it&#8217;s so central when writing locust load tests. You can also look at the
-<code class="xref py py-class docutils literal"><span class="pre">Response</span></code> class at the
-<a class="reference external" href="http://python-requests.org">requests documentation</a>.</p>
+<div class="section" id="httpsession">
+<h2>HttpSession 类<a class="headerlink" href="#httpsession" title="Permalink to this headline">¶</a></h2>
+<p>执行web请求并且在请求之间保持会话(为了能登录或者登出网站)的类。每个请求都会记录所以locust可以展示统计数据。</p>
+<p>这是一个稍微扩展版本的`python-request &lt;<a class="reference external" href="http://python-requests.org">http://python-requests.org</a>&gt;`_的 <code class="xref py py-class docutils literal"><span class="pre">requests.Session</span></code> 类，
+并且大部分这个类的工作方式是完全一样的。但是发起请求(get, post, delete, put, head, options, patch, request)
+的方法现在可以只使用一个 <em>url</em> 参数，这只是URL的路径部分，在这种情况下URL的host部分将会由继承自一个Locust类
+的host属性的HttpSession.base_url加上前缀。</p>
+<p>每一个发起请求的方法都有两个额外的的可选参数，这是Locust定义的，并不存在于python-请求中。它们是:</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param name:</th><td class="field-body">(可选的) 一个可以被指定用来当作Locust的统计数据中一个标签来替代URL路径的参数。
+这可以用来分组不同的请求的URL，在Locust统计数据中作为单一的入口。</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param catch_response:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">(可选的) 布尔参数，如果设置了，可以用来发起一个请求返回一个上下文管理来作为参数工作的限定语句。
+这将允许请求基于返回的内容被标记为失败，尽管返回码是ok(2xx).相反的也是成立的，用户可以使用
+catch_response 来抓取一个请求然后将它标记为成功的尽管返回码并不是(例 500或404)。</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<dl class="docutils">
+<dt>delete(url, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 DELETE 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs:</th><td class="field-body"><em>reques</em> 的可选参数.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>get(url, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 GET 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs:</th><td class="field-body"><em>reques</em> 的可选参数.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>head(url, <a href="#id10"><span class="problematic" id="id11">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 HEAD 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param <a href="#id12"><span class="problematic" id="id13">**</span></a>kwargs:</th><td class="field-body"><em>reques</em> 的可选参数.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>options(url, <a href="#id15"><span class="problematic" id="id16">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 OPTIONS 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param <a href="#id17"><span class="problematic" id="id18">**</span></a>kwargs:</th><td class="field-body"><a href="#id19"><span class="problematic" id="id20">*</span></a>reques*的可选参数.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>patch(url, data=None, <a href="#id22"><span class="problematic" id="id23">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 PATCH 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param data:</th><td class="field-body">(可选的)字典、字节或者类似文件的对象用来在 <em>Requesr</em> 的body中发送的。</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param <a href="#id24"><span class="problematic" id="id25">**</span></a>kwargs:</th><td class="field-body"><em>reques</em> 的可选参数.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>post(url, data=None, json=None, <a href="#id27"><span class="problematic" id="id28">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 POST 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param data:</th><td class="field-body">(可选的)字典、字节或者类似文件的对象用来在 <em>Requesr</em> 的body中发送的。</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param json:</th><td class="field-body">(可选的)在 <em>Requesr</em> 的body中发送的json。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param <a href="#id29"><span class="problematic" id="id30">**</span></a>kwargs:</th><td class="field-body"><em>reques</em> 的可选参数.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>put(url, data=None, <a href="#id32"><span class="problematic" id="id33">**</span></a>kwargs)</dt>
+<dd><p class="first">发送一个 PUT 请求。返回一个 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param url:</th><td class="field-body">新的 <em>Requst</em> 对象的URL。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param data:</th><td class="field-body">(可选的)字典、字节或者类似文件的对象用来在 <em>Requesr</em> 的body中发送的。</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param <a href="#id34"><span class="problematic" id="id35">**</span></a>kwargs:</th><td class="field-body"><em>reques</em> 的可选参数.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://requests.readthedocs.io/en/latest/api/#requests.Response">requests.Response</a></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>request(self, method, url, name=None, catch_response=False, <a href="#id37"><span class="problematic" id="id38">**</span></a>kwargs):</dt>
+<dd><p class="first">构造并发送一个 <code class="xref py py-class docutils literal"><span class="pre">requests.Request</span></code>。返回 <code class="xref py py-class docutils literal"><span class="pre">requests.Response</span></code> 对象。</p>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param method:</th><td class="field-body">新 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象的方法.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param url:</th><td class="field-body">新 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象的 URL.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param name:</th><td class="field-body">(可选的) 一个可以被指定用来当作Locust的统计数据中一个标签来替代URL路径的参数。
+这可以用来分组不同的请求的URL，在Locust统计数据中作为单一的入口。</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param catch_response:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">(可选的) 布尔参数，如果设置了，可以用来发起一个请求返回一个上下文管理来作为参数工作的限定语句。
+这将允许请求基于返回的内容被标记为失败，尽管返回码是ok(2xx).相反的也是成立的，用户可以使用
+catch_response 来抓取一个请求然后将它标记为成功的尽管返回码并不是(例 500或404)。</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param params:</th><td class="field-body">(可选的) <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 中用来在查询字符串中发送的字典或者字节.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param data:</th><td class="field-body">(可选的) 在 <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> body中发送的字典或者字节。</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param headers:</th><td class="field-body">(可选的) <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 发送的HTTP 头部字典.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param cookies:</th><td class="field-body">(可选的) <code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 发送的字典或者CookieJar对象.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param files:</th><td class="field-body">(可选的)  多重编码上传的  <a href="#id39"><span class="problematic" id="id40">``</span></a>&#8216;filename&#8217;: file-like-objects``字典 .</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param auth:</th><td class="field-body">(可选的) 认证元组或者调用接口提供 基础/摘要/自定义 的HTTP认证.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param timeout:</th><td class="field-body">(可选的) 服务器在放弃之前发送数据等待多长时间，浮点数,或者一个 (<a class="reference external" href="user/advanced.html#timeouts">connect timeout, read timeout</a>) 元组。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">type timeout:</th><td class="field-body">浮点数 或 元组</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">param allow_redirects:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">(可选的) 默认设置为True.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">type allow_redirects:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">布尔值</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param proxies:</th><td class="field-body">(可选的) 将协议映射到策略URL的字典。</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param stream:</th><td class="field-body">(可选的) 是否直接下载响应内容。默认为 <code class="docutils literal"><span class="pre">False</span></code>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">param verify:</th><td class="field-body">(可选的) 如果为 <code class="docutils literal"><span class="pre">True</span></code>, SSL证书将被验证，也可以提供一个ca_bundle路径</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param cert:</th><td class="field-body">(可选的) 如果是字符串，则是ssl客户端证书文件(.pem)的路径。如果是元组，是一个 (&#8216;cert&#8217;, &#8216;key&#8217;) 对.</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div>
+<div class="section" id="response">
+<h2>Response 类<a class="headerlink" href="#response" title="Permalink to this headline">¶</a></h2>
+<p>这个类实际上属于 <a class="reference external" href="http://python-requests.org">python-requests</a> 库，就是Locust用来发起HTTP请求的，
+但是它包含在locust的API文档中因为它在写locust负载测试的时候是很核心的。你还可以在
+<a class="reference external" href="http://python-requests.org">requests documentation</a> 查看 :py:class:<a href="#id41"><span class="problematic" id="id42">`</span></a>Response &lt;requests.Response&gt;`类。</p>
+<dl class="docutils">
+<dt>class Response</dt>
+<dd><code class="xref py py-class docutils literal"><span class="pre">Request</span></code> 对象，包含了服务端对一个HTTP请求的响应。</dd>
+<dt>apparent_encoding</dt>
+<dd>可见的编码，有chardet库提供。
+The apparent encoding, provided by the chardet library</dd>
+<dt>close()</dt>
+<dd><p class="first">释放连接到连接池中。一旦这个方法被底层的原始对象调用了就不能再被访问到。</p>
+<p class="last">Note: 通常不需要显式调用.</p>
+</dd>
+<dt>content</dt>
+<dd>响应的内容，以字节为单位。</dd>
+<dt>cookies = None</dt>
+<dd>服务器发回的 Cookies的 CookieJar。</dd>
+<dt>elapsed = None</dt>
+<dd>在发送请求和响应到达之间的经过时间总和(作为一个时间间隔)。这个特性明确的测量发送请求的第一个字节和
+完成解析报头之间花费的时间。因此它是由消费的响应内容或者流的关键字参数的值影响的。</dd>
+<dt>encoding = None</dt>
+<dd>当访问 r.text 时进行编码解码。</dd>
+</dl>
+<p>headers = None
+Case-insensitive Dictionary of Response Headers. For example, headers[&#8216;content-encoding&#8217;] will return the value of a &#8216;Content-Encoding&#8217; response header.</p>
+<p>history = None
+A list of Response objects from the history of the Request. Any redirect responses will end up here. The list is sorted from the oldest to the most recent request.</p>
+<p>is_permanent_redirect
+True if this Response one of the permanent versions of redirect</p>
+<p>is_redirect
+True if this Response is a well-formed HTTP redirect that could have been processed automatically (by Session.resolve_redirects()).</p>
+<p>iter_content(chunk_size=1, decode_unicode=False)
+Iterates over the response data. When stream=True is set on the request, this avoids reading the content at once into memory for large responses. The chunk size is the number of bytes it should read into memory. This is not necessarily the length of each item returned as decoding can take place.</p>
+<p>chunk_size must be of type int or None. A value of None will function differently depending on the value of stream. stream=True will read data as it arrives in whatever size the chunks are received. If stream=False, data is returned as a single chunk.</p>
+<p>If decode_unicode is True, content will be decoded using the best available encoding based on the response.</p>
+<p>iter_lines(chunk_size=512, decode_unicode=None, delimiter=None)
+Iterates over the response data, one line at a time. When stream=True is set on the request, this avoids reading the content at once into memory for large responses.</p>
+<p>Note</p>
+<p>This method is not reentrant safe.</p>
+<p>json(<a href="#id43"><span class="problematic" id="id44">**</span></a>kwargs)
+Returns the json-encoded content of a response, if any.</p>
+<p>Parameters:     <a href="#id45"><span class="problematic" id="id46">**</span></a>kwargs – Optional arguments that json.loads takes.
+Raises: ValueError – If the response body does not contain valid json.
+links
+Returns the parsed header links of the response, if any.</p>
+<p>raise_for_status()
+Raises stored HTTPError, if one occurred.</p>
+<p>raw = None
+File-like object representation of response (for advanced usage). Use of raw requires that stream=True be set on the request.</p>
+<p>reason = None
+Textual reason of responded HTTP Status, e.g. “Not Found” or “OK”.</p>
+<p>request = None
+The PreparedRequest object to which this is a response.</p>
+<p>status_code = None
+Integer Code of responded HTTP Status, e.g. 404 or 200.</p>
+<p>text
+Content of the response, in unicode.</p>
+<p>If Response.encoding is None, encoding will be guessed using chardet.</p>
+<p>The encoding of the response content is determined based solely on HTTP headers, following RFC 2616 to the letter. If you can take advantage of non-HTTP knowledge to make a better guess at the encoding, you should set r.encoding appropriately before accessing this property.</p>
+<p>url = None
+Final URL location of Response.</p>
 </div>
 <div class="section" id="responsecontextmanager-class">
 <h2>ResponseContextManager class<a class="headerlink" href="#responsecontextmanager-class" title="Permalink to this headline">¶</a></h2>
@@ -152,9 +428,9 @@ for locust since it&#8217;s so central when writing locust load tests. You can a
 <li><a class="reference internal" href="#locust">Locust 类</a></li>
 <li><a class="reference internal" href="#httplocust">HttpLocust 类</a></li>
 <li><a class="reference internal" href="#taskset">TaskSet 类</a></li>
-<li><a class="reference internal" href="#task-decorator">task decorator</a></li>
-<li><a class="reference internal" href="#httpsession-class">HttpSession class</a></li>
-<li><a class="reference internal" href="#response-class">Response class</a></li>
+<li><a class="reference internal" href="#task">task 装饰器</a></li>
+<li><a class="reference internal" href="#httpsession">HttpSession 类</a></li>
+<li><a class="reference internal" href="#response">Response 类</a></li>
 <li><a class="reference internal" href="#responsecontextmanager-class">ResponseContextManager class</a></li>
 <li><a class="reference internal" href="#interrupttaskset-exception">InterruptTaskSet Exception</a></li>
 <li><a class="reference internal" href="#event-hooks">Event hooks</a><ul>
